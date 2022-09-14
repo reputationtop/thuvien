@@ -1,0 +1,47 @@
+{% extends "library/layout.html" %}
+
+{% block title %}Hộp thư{% endblock %}
+{% block body %}
+    <a  class="btn btn-sm btn-outline-primary" href="{% url 'mailbook' %}"><h4>Trở lại hộp thư</h4></a>
+    <div>
+        {% if email.author == user %}
+            <div class="col-md-4"><strong>Gửi đến:{{email.recipients}}</strong></div>
+        {% else %}
+            <div class="col-md-4"><strong>Gửi từ:{{email.author}}</strong></div>
+        {% endif %}
+        <div class="col-10 col-md-8 col-lg-6 pt-2">
+    
+            <div class="row box-sizing box-sizing border p-2 ">
+                <div>
+                    {% if email.recipients == user %}
+                        <div>
+                            {% if email.archived %}
+                                <a  class="btn btn-sm btn-outline-primary" href="{% url 'archive_email' email.id%}" >Bỏ thích</a>
+                            {% else %}
+                                <a  class="btn btn-sm btn-outline-primary" href="{% url 'archive_email' email.id%}"  >Thích</a>
+                            {% endif %}
+                        </div>                    
+                    {% endif %}
+
+
+                    <div class="col order-md-2  "><small>{{email.time}}</small></div>                       
+                </div>
+                <div class="col-md-3"><strong>Tiêu đề: {{email.subject}}</strong></div>
+                <div> Đọc :                    
+                    {% if  email.read %}
+                        &#9745;
+                    {% else %}
+                        &#9746;
+                    {% endif %}
+                </div>
+
+
+                <div class="col order-md-2  ">Nội dung: {{email.body}}</div>                        
+                
+            </div>
+
+        </div>            
+    </div>
+{% endblock %}
+
+

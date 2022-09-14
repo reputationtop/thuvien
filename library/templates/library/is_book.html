@@ -1,0 +1,114 @@
+{% extends "library/layout.html" %}
+{% block title %}{{ book.namebook}}{% endblock  %}
+{% block body %}
+    <div>
+
+        <div class=" isb_padding isb-container">
+            <div class="row"> 
+                <div class="col-md-6 d-flex">
+                    <img style="max-width: 350px;"  src="/library/media/{{book.image}}"  class="card-img-top" >
+                </div>  
+                <div class="col-md-6  align-items">
+
+                    <h3>{{ book.namebook}}</h3>
+                    <p>
+                        <small> Cập nhật núc : {{ book.timeb}}</small>
+                    </p>
+                    <p>Thể loại:<small>{{book.num_category }}</small></p>
+
+                    <p class="text-danger">
+                        <strong> Gía sách: {{ book.bid}} V.N.D /1 còn {{ book.numbe_book }} quyển sách</strong>
+                    </p>
+                    <p>Mô tả :<small>{{book.description}}</small></p>
+                    {% if user.is_authenticated %}
+                        {% if  user.is_superuser %}
+                            <form action="{% url 'del_book' book_id %}" method="post">
+                                {% csrf_token %}
+
+                                <button type="submit" class="btn btn-outline-primary btn-sm" style="color:red;">Xóa sách khỏi kệ</button>
+                            </form>
+                            
+                        {% else %}
+                                <strong> Số dư khả dụng: {{ user.money}}  V.N.D</strong>
+                            </p>
+                            <form action="{% url 'NewListing' book_id %}" method="post">
+                                {% csrf_token %}
+                                {% if is_in_list  %}
+                                    {% if listing.active %}
+                                        <p><strong>Bạn đang giữ cuốn sách này</strong></p>
+                                    {% else %}
+                                        <p><strong>Đã đăng kí cuốn sách này</strong></p>
+                                    {% endif %}
+                                {% else %}
+                                    {% if  book.numbe_book < 1%}
+                                        <p><strong>Rất tiếc sách này đã hết,hãy kiên hệ giáo viên hoặc chờ đợi!</strong></p>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-outline-primary btn-sm"><i class="fa fa-minus" aria-hidden="true"></i> Thêm cuốn sách này vào danh sách mượn</button>
+                                    {% endif %}
+                                    
+                                {% endif %}
+                                
+                            </form>
+                            
+                            <form action="{% url 'changelike' book_id %}" method="post" class="d-inline-block">
+
+                                {% csrf_token %}
+                                {% if  is_in_listlike %}
+                                    <i style="color:red;">❤️️</i><button type="submit" class="btn btn-outline-primary"> Bỏ thích/{{ book.num_like}}người thích </button>
+                                {% else %}
+                                    <i>♡</i><button type="submit" class="btn btn-primary "> Thích /{{ book.num_like}}người thích </button>
+                                {% endif %}
+                                {% comment %} <button type="submit" class="btn btn-primary "><i class="fa fa-plus" aria-hidden="true">❤</i>Thích</button> {% endcomment %}
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-danger"><small>Bạn cần <strong><a href="{% url 'login' %}" class="text-danger">Đăng nhập</a></strong> Để có thể thao tác với cuốn sách này.</small></p>
+                    {% endif %}
+                    
+                </div>          
+            </div>
+        </div> 
+        <div class="row py-4 justify-content-center">
+        
+            <div class="col col-sm-10 mx-3 mx-sm-0">
+                <h4>Comments <span class="badge badge-secondary">{{ total_comments }}</span></h4>
+                
+                <!-- Comment form -->
+                {% if user.is_authenticated %}
+                    <form action="{% url 'addcomment' book_id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group pt-2">
+                            {{ comment_form }}
+                        </div>
+                        <div class="form-group text-right mb-2">
+                            <input value="Add comment" class="btn btn-primary" type="submit">
+                        </div>
+                        
+                    </form>
+                {% else %}
+                    <p class="text-danger"><small>Please <strong><a href="{% url 'login' %}" class="text-danger">sign in</a></strong> to add a comment.</small></p>
+                {% endif %}
+    
+            </div>
+    
+        </div>
+        <div class="container">
+            <h4>list coment :</h4>
+            {% for comment in comments %}
+                <div class="row border bg-light py-2 mx-0 mx-md-3 mb-3">
+                    <div class="col-6">
+                        <strong>{{ comment.user }}</strong>
+                    </div>
+                    <div class="col-6 text-right text-muted">
+                        <small><em>{{ comment.time}}</em></small>
+                    </div>
+                    <div class="col-xl-12 pt-1">
+                        {{ comment.comment }}
+                    </div>
+                </div>
+            {% empty %}
+                No active coment
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

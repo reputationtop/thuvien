@@ -1,0 +1,114 @@
+
+{% extends "library/mail_all.html" %}
+
+{% block title %}Hộp thư{% endblock %}
+{% block bodys%}
+
+    <div>
+        
+        <div class=" row align-items-center align-items-center">
+            <div id="mysent" style="display: none;">
+                <h3>Thư đã gửi</h3><br>
+                <div class="col-10 col-md-8 col-lg-6 pt-2">
+                    {% for sent  in mysent_mail %}
+                        <a href="{% url 'read_mail' sent.id%}" class="text-decoration-none text-dark">
+                            <div class="row box-sizing box-sizing border p-2 ">
+                                <div class="col-md-4"><strong>Gửi đến:{{sent.recipients.username}}</strong></div>
+                                <div class="col-md-3">Tiêu đề :{{sent.subject}}</div>
+                                <div> Trạng thái thư:                     {% if  sent.read %}
+                                    &#9745;
+                                {% else %}
+                                    &#9746;
+                                {% endif %}</div>
+                                <div class="col order-md-2  "><small>{{sent.time}}</small></div>                            
+                                
+                            </div>
+                        </a>
+
+                    {% endfor %}
+                </div>            
+            </div>
+            <div id="archive" style="display: none;">
+                <h4>Thư đã lưu:</h4><br>
+                <div class="col-10 col-md-8 col-lg-6 pt-2">
+                    {% for sent  in a_mysent_mail %}
+                        <a href="{% url 'read_mail' sent.id%}" class="text-decoration-none text-dark">
+                            <div class="row box-sizing box-sizing border p-2 ">
+                                <div class="col-md-4"><strong>Gửi đến:{{sent.recipients.username}}</strong></div>
+                                <div class="col-md-3"> <strong>Tiêu đề :{{sent.subject}}</strong></div>
+                                <div> Trạng thái thư:                   {% if  sent.read %}
+                                    &#9745;
+                                {% else %}
+                                    &#9746;
+                                {% endif %}</div>
+                                <div class="col order-md-2  "><small>{{sent.time}}</small></div>                            
+                                
+                            </div>
+                        </a>
+                    {% endfor %}
+                    {% for mail  in a_in_mail %}
+                        <a href="{% url 'read_mail' mail.id%}" class="text-decoration-none text-dark">
+                            <div class="row box-sizing box-sizing border p-2 ">
+                                <div class="col-md-4"><strong>Gửi từ:{{mail.author.username}}</strong></div>
+                                <div class="col-md-3"><strong>Tiêu đề :{{mail.subject}}</strong></div>
+                                <div> Trạng thái thư:                   {% if  sent.read %}
+                                    &#9745;
+                                {% else %}
+                                    &#9746;
+                                {% endif %}</div>
+                                <div class="col order-md-2  "><small>{{mail.time}}</small></div>                            
+                                
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>   
+            </div>
+            <div id="mall" style="display: block;">
+                <div class="col-10 col-md-8 col-lg-6 pt-2">
+                    <h3>Thư đã nhận:</h3><br>
+                    {% for mail  in in_mail %}
+                        <a href="{% url 'read_mail' mail.id%}" class="text-decoration-none text-dark">
+                            <div class="row box-sizing box-sizing border p-2 ">
+                                <div class="col-md-4"><strong>Gửi từ:{{mail.author.username}}</strong></div>
+                                <div class="col-md-3">Tiêu đề :<strong>{{mail.subject}}</strong></div>
+                                <div> Trạng thái thư:                   {% if  mail.read %}
+                                    &#9745;
+                                {% else %}
+                                    &#9746;
+                                {% endif %}</div>
+                                <div class="col order-md-2  "><small>{{mail.time}}</small></div>                            
+                                
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>            
+            </div>
+
+
+        </div>
+        <script language="javascript">
+    
+            document.getElementById("inbox").onclick = function () {
+                document.getElementById("mall").style.display = 'block';
+                document.getElementById("archive").style.display = 'none';
+                document.getElementById("mysent").style.display = 'none';
+            };
+
+            document.getElementById("sent").onclick = function () {
+                document.getElementById("mysent").style.display = 'block';
+                document.getElementById("archive").style.display = 'none';
+                document.getElementById("mall").style.display = 'none';
+            };
+            document.getElementById("archived").onclick = function () {
+                document.getElementById("archive").style.display = 'block';
+                document.getElementById("mysent").style.display = 'none';
+                document.getElementById("mall").style.display = 'none';
+            };
+            document.getElementById("inbox").onclick = function () {
+                document.getElementById("mall").style.display = 'block';
+                document.getElementById("archive").style.display = 'none';
+                document.getElementById("mysent").style.display = 'none';
+            };
+        </script>
+    </div>
+{% endblock bodys%}

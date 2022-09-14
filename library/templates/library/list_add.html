@@ -1,0 +1,132 @@
+{% extends "library/layout.html" %}
+{% load humanize %}
+{% block title %}Quản lí sách{% endblock %}
+{% block body %}
+    <div class="row pb-4 justify-content-center">
+        {% if  user.is_authenticated %}
+      
+            {% if user.is_superuser %}
+                <h2 class="text-center">Những cuốn sách cần xử lí</h2>   
+                {% comment %} <div class="text-center justify-content-center">
+                    <div style="display: flex;" class"border"> {% endcomment %}
+
+
+                <div class="container">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <div class="mx-4 border" style="text-align: center; padding-top: 1px;max-width: 330px">
+                            {% if list_add %}
+                                <h4>Danh sách h/s đăng kí</h4><br>
+                                {% for list_a in  list_add %}
+
+                                    {% comment %} <form action="{% url 'In_listing' list_a.id %}" method="post">
+                                        {% csrf_token %}
+                            
+                                        <button type="submit" class="btn btn-outline-primary btn-sm" style="color:red;">Xóa sách khỏi kệ</button>
+                                    </form> {% endcomment %}
+                                
+                                    <p class="border">
+                                        {% comment %} <img src="/library/media/{{list_a.item.image}}"  class="card-img-top" > {% endcomment %}
+
+
+                                        {% comment %} <a href="{% url 'In_listing' list_a.id %}">
+                                            <h6><a href="{% url 'book' list_a.item.id%}">Tên sách : {{ list_a.item.namebook}}</a></h6>
+                                            <small><a href="{% url 'human' list_a.user.id%}">Người đăng kí :{{ list_a.user }}</a></small> <br>
+                                            <small>Thời gian đăng kí :{{ list_a.timel|naturaltime}}</small>
+                                            <div id="list{{ list_a.id }}"></div>       dung de hien thi khi chap nhan cho muon                                     
+                                        </a> {% endcomment %}
+                                        <h6><a href="{% url 'book' list_a.item.id%}">Tên sách : {{ list_a.item.namebook}}</a></h6>
+                                        <small><a href="{% url 'human' list_a.user.id%}">Người đăng kí :{{ list_a.user }}</a></small> <br>
+                                        <small>Thời gian đăng kí :{{ list_a.timel|naturaltime}}</small>
+                                        <small>Cược :{{ list_a..item.bid }} V.N.D</small>
+                                        <div id="list{{ list_a.id }}"></div>                                            
+
+                                        <form action="{% url 'close_listing' list_a.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm justify-content-center" style="color:red;">Xóa khỏi danh sách</button>
+                                        </form>
+                                        <button data-listid="{{ list_a.id }}"
+                                            class="btn  edit_change btn-sm btn-outline-primary justify-content-center">Chấp nhận cho mượn
+                                        </button>                                        
+                                    </p>
+
+
+                                {% endfor %}
+                            {% else %}
+                                <h4>Danh sách đăng kí trống !</h4><br>
+                            {% endif %}
+                        </div>
+                        <div class="mx-4 border" style="text-align: center; padding-top: 1px;max-width: 330px">
+                            {% if  list_in%}
+                                <h4>Danh sách h/s đang mượn</h4><br>
+                                {% for lista_i in  list_in %}
+
+                                    <p class="border">
+                                        <a href="{% url 'In_listing' lista_i.id %}">
+                                            {% comment %} <img src="/library/media/{{lista_i.item.image}}"  class="card-img-top" > {% endcomment %}
+                                            <h6><a href="{% url 'book' lista_i.item.id%}">Tên sách : {{ lista_i.item.namebook}}</a></h6>
+                                            <small><a href="{% url 'human' lista_i.user.id%}">Người đăng kí :{{ lista_i.user }}</a></small> <br>
+                                            {% comment %} <small>Tiền dự kiến phải trả : {{ lista_i.money_listing }} V.N.D</small> {% endcomment %}
+                                            {% comment %} <small>Thời gian trả dự kiến : {{ lista_i.date_om}} ngày</small> {% endcomment %}
+                                            <small>Tiền dự kiến ban đầu phải trả  : {{ lista_i.action_bid}}</small>
+                                            <small>Thời gian trả dự kiến : {{ lista_i.timel }}</small>
+                                        </a>
+                                        <form action="{% url 'close_listing' lista_i.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm" style="color:red;">Xóa khỏi danh sách</button>
+                                        </form>
+                                    </p>
+                                
+                                {% endfor %}
+                            {% else %}
+                                <h4>Danh sách đang mượn trống</h4><br>
+                            {% endif %}                    
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+
+
+                <h2 class="nav-item">Kho sách của : {{ user.username }}</h2><br>
+                <strong> có thể mượn thêm :{{user.limit_book}} cuốn sách/ Số dư khả dụng: {{ user.money}}  V.N.D</strong>
+                <div class="container">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <div class="mx-4 border" style="text-align: center; padding-top: 1px;max-width: 330px">
+                            {% if list_add %}
+                                <h4>Danh sách đăng kí</h4><br>
+                                {% for list_a in  list_add %}
+                                    <p class="border">
+                                        
+                                        <h6><a href="{% url 'book' list_a.item.id%}">Tên sách : {{ list_a.item.namebook}}</a></h6>
+                                        {% comment %} <small><a href="">Người đăng kí :{{ list_a.user }}</a></small> <br> {% endcomment %}
+                                        <strong></strong>
+                                        <small>Thời gian đăng kí :{{ list_a.timel}}</small>
+                                    </p>
+                                {% endfor %}
+                            {% else %}
+                                <h4>Danh sách đăng kí trống</h4><br>
+                            {% endif %}
+                        </div>
+                        <div class="mx-4 border" style="text-align: center; padding-top: 1px;max-width: 330px">
+                            {% if  list_in%}
+                                <h4>Danh sách đang mượn</h4><br>
+                                {% for lista_i in  list_in %}
+                                    
+                                    <p class="border">
+                                        <h6><a href="{% url 'book' lista_i.item.id%}">Tên sách : {{ lista_i.item.namebook}}</a></h6>
+                                        {% comment %} <small>Người đăng kí :{{ lista_i.user }}</small><br> {% endcomment %}
+                                        <small>Thời gian trả dự kiến : {{ lista_i.timel}} / {{ lista_i.date_om}} ngày</small>
+                                        
+                                    </p>
+                                
+                                {% endfor %}
+                            {% else %}
+                                <h4>Danh sách đang mượn trống</h4><br>
+                            {% endif %}                    
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

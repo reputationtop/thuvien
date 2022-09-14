@@ -1,0 +1,20 @@
+{% extends "library/layout.html" %}
+{% block title %}{{ category.name }}{% endblock  %}
+{% block body %}
+    <h2 class="text-center">{{ category.name}}</h2>
+    <div>
+        <div class="container d-flex flex-wrap justify-content-center">
+            {% for book in books %}
+                <div class="card m-2 " style="width: 20rem;">
+                    <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
+                        <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
+                        <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                        <small>{{ book.description}}</small>
+                    </a>
+                </div>
+            {% empty %}
+                Không tìm thấy danh sách !!
+                <a class="nav-link" type="button" href="{% url 'categories' %}">Chọn lại thể loại</a>
+            {% endfor %}  
+    </div>
+{% endblock %}

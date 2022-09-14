@@ -1,0 +1,145 @@
+{% extends "library/layout.html" %}
+{% block title %}Kho Sách{% endblock  %}
+{% block body %}
+    <div>
+{% comment %} 
+        <div>
+            <div class="container d-flex flex-wrap justify-content-center">
+                {% for book in out_read %}
+                    <div class="card m-2 " style="width: 20rem;">
+                        <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
+                            <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
+                            <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                            <small>{{ book.description}}</small>
+                        </a>
+                    </div>  
+                {% endfor %}
+            </div>        
+        </div> {% endcomment %}
+
+
+
+        <div class="ModuleContent">
+            <h2 class="page-title">ĐỀ XUẤT <i class="fa fa-angle-right"></i></h2>
+            <div class="items-slide">
+                <div class="owl-carousel clearfix owl-theme" style="opacity: 1; display: block;">
+                    <div class="owl-wrapper-outer">
+                        <div class="owl-wrapper" style="width: 4060px; left: 0px; display: block; transition: all 800ms ease 0s;">
+                            <div class="owl-item " style="width: 203px;">
+                                <div class="flex_img">
+
+                                    {% for book in out_read %}
+                                        <div class="card m-2 " style="width: 20rem;">
+                                            <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
+                                                <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
+                                                <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                                                <small>{{ book.description}}</small>
+                                            </a>
+                                        </div>  
+                                    {% endfor %}    
+                          
+                                </div>
+                                <a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
+                                <a class="next" onclick="plusSlides(1, 0)">&#10095;</a>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <div class="owl-controls clickable" style="display: block;"><div class="owl-pagination"><div class="owl-page active"><span class=""></span></div><div class="owl-page"><span class=""></span></div></div></div></div>
+            <a href="#" class="prev" aria-label="Trước">
+            </a>
+            <a href="#" class="next" aria-label="Sau">
+            </a>
+            </div></div>
+
+
+
+
+
+
+
+            <h3> KHO SÁCH HIỆN CÓ</h3>
+            {% if user.is_authenticated %}
+                {% if  user.is_superuser %}
+                    <h4><a class="nav-link" href="{% url 'newbook' %}">Thêm Sách Vào Kho</a></h4>
+                    
+                {% endif %}
+            {% endif %}
+            <div class="container d-flex flex-wrap justify-content-center">
+                {% for book in books %}
+                    <div class="card m-2 " style="width: 20rem;">
+                        <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
+                            <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
+                            <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                            <small>{{ book.description}}</small>
+                        </a>
+                    </div>
+                {% empty %}
+                    Kho Trống !!!!
+                {% endfor %}    
+            </div>        
+        </div>
+        <div style="text-align: center; padding-top: 1px">
+            {% if books.paginator.num_pages > 1 %}
+                <nav aria-label="Page navigation">
+                    <ul class="justify-content-center pagination ml-5 mt-5">
+                        {% if books.has_previous %}
+                            <li class="page-item"> <a class="page-link" href="?page=1">First</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ books.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+                        {% endif %}
+    
+                        <li class="page-item current-item"><span class="current page-link">
+                            Page {{ books.number }} of {{ books.paginator.num_pages }}
+                        </span></li>
+    
+                        {% if books.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ books.next_page_number }}">&raquo;</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ books.paginator.num_pages }}">Last</a>
+                        {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% else %}
+                <div style="height: 60px"></div>
+            {% endif %}        
+        </div>
+    </div>
+    <script>
+        let slideIndex = 0;
+        showSlides();
+        function plusSlides(n) {
+          showSlides(slideIndex += n);
+        }
+        function showSlides() {
+          let i;
+          let slides = document.getElementsByClassName("mySlides");
+          let dots = document.getElementsByClassName("dot");
+          for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+          }
+          slideIndex++;
+          if (slideIndex > slides.length) {slideIndex = 1}    
+          for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+          }
+          slides[slideIndex-1].style.display = "block";  
+          dots[slideIndex-1].className += " active";
+          setTimeout(showSlides, 7000); // Change image every 2 seconds
+        }
+      </script>
+
+{% endblock %}

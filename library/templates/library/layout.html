@@ -1,0 +1,89 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{% endblock %}</title>
+        <link href="{% static 'library/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'library/css/styles.css' %}" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/ee1e4d6724.js" crossorigin="anonymous"></script>
+        
+    </head>
+
+    <body>
+        <div >
+            {% comment %} <nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-lg " > {% endcomment %}
+            <nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-lg header " >
+                <h4 class="navbar-brand">Thư Viện</h4>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                <div class="row">
+
+                    <div class="col-0 menu " >
+
+                        <ul class="nav navbar-nav mr-auto justify-content-center">
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'index' %}"> TẤT CẢ SÁCH</a>
+                            </li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'categories' %}">THỂ LOẠI</a></li>
+
+                            {% if  user.is_authenticated %}
+                                
+                                {% if user.is_superuser %}
+                                    {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'bookcase' %}"> Quản Lí kho Sách</a></li> {% endcomment %}
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'Is_listing' %}"> QUẢN LÍ KHO SÁCH</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="" >MỞ RỘNG</a>
+                                        <ul class="menu_child">
+                                            <li class="nav-item"><a class="nav-link" href="{% url 'all_user' %}">DANH SÁCH CÁC TÀI KHOẢN</a></li>
+                                            <li class="nav-item"><a class="nav-link" href=" {% url 'register' %}">TẠO TÀI KHOẢN</a></li>
+                                                                
+                                        </ul>
+                                    </li>
+                                {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{% url 'Is_listing' %}">KHO SÁCH CỦA: {{ user.username }}</a></li>
+                                    {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'bookcase' %}">kho sach cua {{ user.username }}</a></li> {% endcomment %}
+                                {% endif %}
+                                <li class="nav-item"><a class="nav-link" href="{% url 'mailbook' %}">HỘP THƯ</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'views_active_human' user.id %}">LỊCH SỬ HOẠT ĐỘNG</a></li>
+                                <li class="nav-item"><a class="nav-link" href=" {% url 'logout' %}"  style="float: right;">ĐĂNG SUẤT</a></li>
+                            {% else %}
+                                <li class="nav-item justify-content-end" style="float: right;"><a class="nav-link" style="float: right;"  href=" {% url 'login' %}" >ĐĂNG NHẬP</a></li>
+                            {% endif %}
+
+                        </ul>
+                    </div>  
+                    <div class="search flex_img justify-content-center">
+                        <form  action="BookSearchView" method="get">
+                            {% csrf_token %}
+                            <input type="text" style="width: 60%" name="search" placeholder="Tìm tên sách...">
+                            <button type="submit" >Tìm kiếm</button>
+                        </form>                    
+                    </div>              
+                </div>
+
+                
+            </nav>
+
+
+            {% include 'library/includes/messages.html' %}
+            <div style="padding-top: 1rem;">
+                {% block body %}
+                {% endblock %}
+            </div>
+
+            <script src="{% static 'library/js/bootstrap.min.js' %}"></script>
+            <script src="{% static 'library/js/jquery-3.6.0.min.js' %}"></script>
+            <script src="{% static 'library/js/posts.js' %}"></script>
+            <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        </div>
+    </body>
+</html>

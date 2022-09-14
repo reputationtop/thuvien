@@ -1,0 +1,25 @@
+{% extends "library/layout.html" %}
+
+{% block title %}Quản lí danh sách {% endblock %}
+{% block body %}
+    <div>
+        <div class="col-md-6 d-flex">
+            <img style="max-width: 350px;"  src="/library/media/{{list.item.image}}"  class="card-img-top" >
+        </div>  
+        <div>
+            <strong>Tên hs: {{list.user.username}} /Số dư : {{list.user.money}}</strong><br>
+            <strong> Tên cuốn sách :{{list.item.namebook}}</strong><br>
+            {% if list.active == True %}
+                <small>Ngày lập danh sách  {{list.timel}} </small>
+                <small>Ngày lập danh sách  {{list.convert_date }} </small>
+                <small>Phí mất : {{list.money_listing}} </small>
+                <small>Thời gian còn lại {{list.date_om}} ngày</small><br>
+                <small>Ngày lập danh sách  {{list.convert_date }} </small><br>
+                <small>gia sach {{list.item.bid}} </small><br>
+            {% else %}
+                <small> Ngày bắt đầu mượn {{list.timel}}</small>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

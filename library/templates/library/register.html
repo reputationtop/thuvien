@@ -1,0 +1,44 @@
+
+{% extends "library/layout.html" %}
+
+{% block body %}
+    <h2 class="text-center">Tạo thêm tài khoản</h2>
+        {% if  user.is_authenticated%}
+            {% if user.is_superuser%}
+                <form action="{% url 'register' %}" method="post" class="form-signin" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control" type="file" name="avatar" action="/library/media/"  placeholder="Ảnh">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" autofocus type="text" name="username" placeholder="Tên tài khoản">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="email" name="email" placeholder="Email đăng kí">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password" placeholder="Mật khẩu">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="confirmation" placeholder="Nhập lại mật khẩu">
+                    </div>
+                    <div style="text-align: center; padding-top: 1px">
+                        <nav style=" padding-top: 2px;">
+                            <input class="btn btn-primary "  style=" padding-top: 2px" name="students" type="submit" value="Thêm tài khoản học sinh">
+                        </nav>
+                        <nav style=" padding-top: 2px;">
+                            <input class="btn btn-primary "  type="submit" value="Tạo và đăng nhập tài khoản học sinh">
+                            
+                        </nav>
+                        <nav style=" padding-top: 2px;">
+                            <input class="btn btn-primary " name="teacher" style=" padding-top: 2px; color: rgba(255,255,255,.55);"type="submit" value="Tạo và đăng nhập tài khoản giáo viên">                    
+                        </nav>
+                        
+                    </div>
+            {% else %}
+                <h1 class="text-center">Bạn cần phải đăng nhập tài khoản giáo viên để có thể tạo thêm tài khoản</h1>
+                <h2 class="text-center"><a class="btn btn-primary" href="{% url 'login' %}">Nhấn vào đây để đăng nhập.</a></h2>
+            {% endif %} 
+        {% endif %} 
+{% endblock %}
+

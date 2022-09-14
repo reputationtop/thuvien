@@ -1,0 +1,19 @@
+{% extends "library/layout.html" %}
+
+{% block title %}login {% endblock %}
+{% block body %}
+    <h2 class="text-center">Thể loại</h2>   
+    <div class="row pb-4 container">
+        <div class="row justify-content-center text-center">
+            {% for category  in categories %}
+                <div class="col-sm-4 border mx-4  my-2 py-auto py-lg-4 btn-light">
+                    <a class="text-dark text-center text-decoration-none" href="{% url 'category' category.id %}">{{ category.name }}</a>
+                </div>
+            {% empty %}
+                Không có danh mục nào được tìm thấy
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}

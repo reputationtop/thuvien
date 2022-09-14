@@ -1,0 +1,16 @@
+{% extends "library/layout.html" %}
+
+{% block title %}Hộp thư{% endblock %}
+{% block body %}
+    <div class="text-center">
+        <button class="btn btn-sm btn-outline-primary" id="inbox">Thư đến</button>
+        <a  class="btn btn-sm btn-outline-primary" href="{% url 'newemail' %}" >Viết thư</a>
+        <button class="btn btn-sm btn-outline-primary" id="sent"> <Table>Thư đã gửi</Table></button>
+        <button class="btn btn-sm btn-outline-primary" id="archived">Thư đã lưu</button>    
+    </div>
+    <div class="container d-flex flex-wrap justify-content-center">
+        {% block bodys %}
+        {% endblock bodys%}     
+    </div>
+
+{% endblock %}

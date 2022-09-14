@@ -1,0 +1,27 @@
+{% extends "library/layout.html" %}
+
+{% block title %}Đăng nhập {% endblock %}
+{% block body %}
+    <h2 class="text-center title">Đăng nhập</h2>
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+    <form action="{% url 'login' %}" method="post" class="form-signin">
+        {% csrf_token %}
+        <div class="form-group">
+            <h6>Tàu khoản :</h6>
+            <input autofocus class="form-control" type="text" name="username" placeholder="Tên người dùng" required>
+        </div>
+        <div class="form-group" style=" padding-top: 1px">
+            <h6>Mật khẩu:</h6>
+            <input class="form-control" type="password" name="password" placeholder="Mật khẩu" required>
+        </div>
+        <nav style="text-align: center; padding-top: 1px">
+            <input class="center byn btn-lg btn-primary btn-block" type="submit" value="Đăng nhập">            
+        </nav>
+
+        <strong class="mt-2">Bạn chưa có tài khoản ? Hãy liên hệ giáo viên của bạn!</strong>
+        {% comment %} <p class="mt-2">Bạn chưa có tài khoản ?<a href="{% url 'register' %}">register here!</a></p> {% endcomment %}
+    </form>
+
+{% endblock %}

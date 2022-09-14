@@ -1,0 +1,29 @@
+{% extends "library/layout.html" %}
+{% block title %}Thêm sách{% endblock  %}
+{% block body %}
+<h2 class="text-center title ">Nhập thông tin sách vào kho!</h2>
+    <div class=" row align-items-center align-items-center">
+        <div class="col-10 col-md-8 col-lg-6 pt-2">
+            <form action="{% url 'newbook' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for forms in form %}
+                    {% if forms.name == 'image' %}
+                        <div action="/library/media/" >
+                                {{ forms }}   
+                            </div>
+                            
+                    {% else %}
+                        <div class="form-group">
+                            {{ forms.label_tag }} {{ forms }}
+                        </div> 
+                    {% endif %}
+                {% endfor %}
+                <div class="form-group my-4">
+                    <button type="submit" class="btn btn-primary btn-customized btn-block">Save</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+{% endblock %}
+
