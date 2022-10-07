@@ -1,0 +1,71 @@
+
+    <!DOCTYPE html>
+    <!-- Created By CodingNepal -->
+    <html lang="en" dir="ltr">
+       <head>
+          <meta charset="utf-8">
+          <title>Responsive Owl-Carousel Slider | CodingNepal</title>
+          <link rel="stylesheet" href="abc.css">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+       </head>
+       <body>
+          <div class="wrapper">
+             <div class="carousel owl-carousel owl-theme">
+                <div class="card card-1" style="color: blue;">
+                   A
+                </div>
+                <div class="card card-2" style="color: red;">
+                   B
+                </div>
+                <div class="card card-3" style="color: blue;">
+                   C
+                </div>
+                <div class="card card-4" style="color: red;">
+                   DF
+                </div>
+                <div class="card card-5" style="color: blue;">
+                   E
+                </div>
+                <div class="card card-6" style="color: blue;">
+                  f
+               </div>
+             </div>
+          </div>
+          <script>
+             $(".carousel").owlCarousel({
+               margin: 20,
+               loop: true,
+               autoplay: true,
+               autoplayTimeout: 2000,
+               nav:true,
+               autoplayHoverPause: true,
+               responsive: {
+                  0:{
+                     items:1,
+                     nav: false
+                  },
+                     600:{
+                     items:2,
+                     nav: false
+                  },
+                     700:{
+                     items:3,
+                     nav: false
+                  },
+                     800:{
+                     items:4,
+                     nav: false
+                  },
+                     900:{
+                     items:5,
+                     nav: false
+                  },
+
+               }
+             });
+          </script>
+       </body>
+    </html>

@@ -2,66 +2,53 @@
 {% block title %}Kho Sách{% endblock  %}
 {% block body %}
     <div>
-{% comment %} 
-        <div>
-            <div class="container d-flex flex-wrap justify-content-center">
-                {% for book in out_read %}
-                    <div class="card m-2 " style="width: 20rem;">
-                        <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
-                            <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
-                            <img src="/library/media/{{book.image}}"  class="card-img-top" >
-                            <small>{{ book.description}}</small>
-                        </a>
-                    </div>  
-                {% endfor %}
-            </div>        
-        </div> {% endcomment %}
+        <div class="">
 
-
-
-        <div class="ModuleContent">
             <h2 class="page-title">ĐỀ XUẤT <i class="fa fa-angle-right"></i></h2>
-            <div class="items-slide">
-                <div class="owl-carousel clearfix owl-theme" style="opacity: 1; display: block;">
-                    <div class="owl-wrapper-outer">
-                        <div class="owl-wrapper" style="width: 4060px; left: 0px; display: block; transition: all 800ms ease 0s;">
-                            <div class="owl-item " style="width: 203px;">
-                                <div class="flex_img">
-
-                                    {% for book in out_read %}
-                                        <div class="card m-2 " style="width: 20rem;">
-                                            <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
-                                                <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
-                                                <img src="/library/media/{{book.image}}"  class="card-img-top" >
-                                                <small>{{ book.description}}</small>
-                                            </a>
-                                        </div>  
-                                    {% endfor %}    
-                          
-                                </div>
-                                <a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
-                                <a class="next" onclick="plusSlides(1, 0)">&#10095;</a>    
-                            </div>
-                        </div>
+                <div>
+                    <div class="owl-carousel owl-theme">
+                        {% for book in out_read %}
+                            <div class="card_title m-2 ">
+                                <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
+                                    <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
+                                    <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                                    <small>{{ book.description}}</small>
+                                </a>
+                            </div>  
+                        {% endfor %}   
                     </div>
-                </div>
-            </div>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            <div class="owl-controls clickable" style="display: block;"><div class="owl-pagination"><div class="owl-page active"><span class=""></span></div><div class="owl-page"><span class=""></span></div></div></div></div>
-            <a href="#" class="prev" aria-label="Trước">
-            </a>
-            <a href="#" class="next" aria-label="Sau">
-            </a>
-            </div></div>
+
+        
+                    <script>
+                        $(document).ready(function() {
+                        var owl = $('.owl-carousel');
+                            owl.owlCarousel({
+                                margin: 10,
+                                nav: true,
+                                loop: true,
+                                dots:false,
+                                responsive: {
+                                0: {
+                                    items: 2
+                                },
+                                540: {
+                                    items: 3
+                                },
+                                750: {
+                                    items: 4
+                                },
+                                970: {
+                                    items: 5
+                                }
+
+
+                                }
+                            })
+                        })
+                        </script>
+        
+        
+                <div >
 
 
 
@@ -76,19 +63,27 @@
                     
                 {% endif %}
             {% endif %}
-            <div class="container d-flex flex-wrap justify-content-center">
-                {% for book in books %}
-                    <div class="card m-2 " style="width: 20rem;">
-                        <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
-                            <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
-                            <img src="/library/media/{{book.image}}"  class="card-img-top" >
-                            <small>{{ book.description}}</small>
-                        </a>
-                    </div>
-                {% empty %}
-                    Kho Trống !!!!
-                {% endfor %}    
-            </div>        
+            <div class="container">
+                <div class=" d-flex flex-wrap">
+                {% comment %} <div class=" d-flex flex-wrap justify-content-center"> {% endcomment %}
+                    {% for book in books %}
+                        {% comment %} <div class="card m-2 " style="width: 20rem;"> {% endcomment %}
+                        <div class="card">
+                            <div class="m-2 ">
+
+                                <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
+                                    <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
+                                    <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                                    <small>{{ book.description}}</small>
+                                </a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        Kho Trống !!!!
+                    {% endfor %}    
+                </div>                 
+            </div>
+       
         </div>
         <div style="text-align: center; padding-top: 1px">
             {% if books.paginator.num_pages > 1 %}
@@ -140,6 +135,8 @@
           dots[slideIndex-1].className += " active";
           setTimeout(showSlides, 7000); // Change image every 2 seconds
         }
+
+
       </script>
 
 {% endblock %}

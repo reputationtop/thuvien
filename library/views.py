@@ -42,9 +42,10 @@ def index(request):
         # all_book = arr.array(0, thisbook)
 
     if request.user.is_authenticated:
-        out_read = offer_book(request.user.id)
+        user = request.user
+        out_read = offer_book(user.id)
     else:
-        out_read = offer_book(None)
+        out_read = offer_book( None)
     print("is book")
     print(out_read) 
     paginator = Paginator(all_book, 12)
@@ -63,27 +64,23 @@ def offer_book(user_id):
 
 
         list_add = Listing.objects.filter(user=users).order_by("-timel")[:10]
-        
-        for list in list_add :
-            
-            mylist = list.item.category.all()
-            b += mylist
-
+        if list_add is not None:
+            list_add = Listing.objects.all().order_by("-timel")
+            for list in list_add :
+                
+                mylist = list.item.category.all()
+                b += mylist
+        else:
+            for list in list_add :
+                
+                mylist = list.item.category.all()
+                b += mylist
     else:
-
         list_add = Listing.objects.all().order_by("-timel")
         for list in list_add :
             
             mylist = list.item.category.all()
             b += mylist
-            # mystring = ",".join([str(char) for char in mylist])
-            # print(mystring)
-            
-            # a = a + list.item.category.num_category()
-        #     b = list.item.category.num_category()
-        #     print("ab",a)
-        #     print(b)
-        # mystring = ",".join([str(char) for char in a])
     mystring_b =str( ",".join([str(char) for char in b]))
     print("test")
     len_xyz = len(Counter(mystring_b.split(",")))
@@ -100,9 +97,9 @@ def offer_book(user_id):
     x = []
     all_book = Book.objects.all()
     for i_a in cz:
-        category_id = Category.objects.get(name=i_a)
+        category_id = Category.objects.get(name = i_a)
         all_book = all_book.filter( category=category_id.id ).order_by("-timeb")
-        # all_book = Book.objects.filter( category=category_id.id ).order_by("-timeb")
+
         for i in all_book:
             x.append(i)
     y = set(x[:10])
@@ -503,19 +500,37 @@ def add_comment(request, book_id):
             active_a.save()  
             messages.success(request, 'Đã thêm nhận xét thành công')
             return HttpResponseRedirect(reverse("book", args=(book_id,)))
+csrf_exempt
 @login_required(login_url='login')
-def mailbook(request):
-    username = request.user.username
-    user_profile = User.objects.get(username=username)
-    mysent_mail = Email.objects.filter(author=user_profile, archived=False)
+def mailbook(request ):
+    user_profile = request.user
+    mysent_mail = Email.objects.filter( author=user_profile, archived=False)
     in_mail = Email.objects.filter(recipients=user_profile, archived=False)
     a_mysent_mail = Email.objects.filter( author=user_profile, archived=True)
     a_in_mail = Email.objects.filter(recipients=user_profile, archived=True)
+    if request.method =="POST":
+        maill = NewemailForm(request.POST)
+        maill.save
+        if maill.is_valid():
+            maill.instance.author = request.user
+            maill.save()
+            maill = NewemailForm()
+            return render(request, "library/mail.html", {
+                "in_mail": in_mail,
+                "mysent_mail": mysent_mail,
+                "a_mysent_mail":a_mysent_mail,
+                "a_in_mail": a_in_mail,
+                "maill": maill,
+            })
+    else: 
+        # If a GET (or any other method), we'll create a blank form
+        maill = NewemailForm()
     return render(request, "library/mail.html", {
         "mysent_mail": mysent_mail,
         "in_mail": in_mail,
         "a_mysent_mail":a_mysent_mail,
         "a_in_mail": a_in_mail,
+        "maill": maill
     })
     
     
@@ -579,11 +594,13 @@ def newemail(request):
             # Saves new listing
             maill.save()
             # Redirect to listing page 
+            maill = NewemailForm()
             return render(request, "library/mail.html", {
                 "in_mail": in_mail,
                 "mysent_mail": mysent_mail,
                 "a_mysent_mail":a_mysent_mail,
                 "a_in_mail": a_in_mail,
+                "maill": maill,
             })
     else: 
         # If a GET (or any other method), we'll create a blank form

@@ -83,29 +83,48 @@
                     {% endfor %}
                 </div>            
             </div>
+            <div id="new_mall" style="display: none;">
+                <h2 class="text-center">Thư mới</h2>   
+                <div class="form-signin">
+                    <form action="{% url 'mailbook' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for mail in maill %}
+                            <div class="form-group">
+                                {{ mail.label_tag }} {{ mail}}
+            
+                            </div>
+                        {% endfor %}
+                        <div class="form-group my-4">
+                            <button type="submit" class="btn btn-primary btn-customized btn-block">Save</button>
+                        </div>
+                    </form>
+                </div> 
 
-
-        </div>
+            </div>
         <script language="javascript">
     
             document.getElementById("inbox").onclick = function () {
+                document.getElementById("new_mall").style.display = 'none';
                 document.getElementById("mall").style.display = 'block';
                 document.getElementById("archive").style.display = 'none';
                 document.getElementById("mysent").style.display = 'none';
             };
 
             document.getElementById("sent").onclick = function () {
+                document.getElementById("new_mall").style.display = 'none';
                 document.getElementById("mysent").style.display = 'block';
                 document.getElementById("archive").style.display = 'none';
                 document.getElementById("mall").style.display = 'none';
             };
             document.getElementById("archived").onclick = function () {
+                document.getElementById("new_mall").style.display = 'none';
                 document.getElementById("archive").style.display = 'block';
                 document.getElementById("mysent").style.display = 'none';
                 document.getElementById("mall").style.display = 'none';
             };
-            document.getElementById("inbox").onclick = function () {
-                document.getElementById("mall").style.display = 'block';
+            document.getElementById("newemail").onclick = function () {
+                document.getElementById("new_mall").style.display = 'block';
+                document.getElementById("mall").style.display = 'none';
                 document.getElementById("archive").style.display = 'none';
                 document.getElementById("mysent").style.display = 'none';
             };

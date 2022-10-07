@@ -37,7 +37,7 @@
                                         <h6><a href="{% url 'book' list_a.item.id%}">Tên sách : {{ list_a.item.namebook}}</a></h6>
                                         <small><a href="{% url 'human' list_a.user.id%}">Người đăng kí :{{ list_a.user }}</a></small> <br>
                                         <small>Thời gian đăng kí :{{ list_a.timel|naturaltime}}</small>
-                                        <small>Cược :{{ list_a..item.bid }} V.N.D</small>
+                                        <small>Cược :{{ list_a.item.bid }} V.N.D</small>
                                         <div id="list{{ list_a.id }}"></div>                                            
 
                                         <form action="{% url 'close_listing' list_a.id %}" method="post">
