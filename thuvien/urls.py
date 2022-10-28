@@ -37,6 +37,7 @@ urlpatterns = [
     path("read_mail/<int:email_id>", views.read_mail, name="read_mail"),
     path("archive_email/<int:email_id>", views.archive_email, name="archive_email"),
     
+    path("newcategory", views.newcategory, name="newcategory"),
     path("categories", views.categories, name="categories"),
     path("category/<int:category_id>", views.category, name="category"),
     
@@ -45,14 +46,21 @@ urlpatterns = [
     
     
     path("human/<int:user_id>", views.human, name="human"),
+    path("views_active_all/<int:user_id>", views.views_active_all, name="views_active_all"),
     path("views_active_human/<int:user_id>", views.views_active_human, name="views_active_human"),
+    path("views_active_book/<int:user_id>", views.views_active_book, name="views_active_book"),
+    path("views_active_mall/<int:user_id>", views.views_active_mall, name="views_active_mall"),
+    path("views_active_coment/<int:user_id>", views.views_active_coment, name="views_active_coment"),
+    path("views_active_money/<int:user_id>", views.views_active_money, name="views_active_money"),
+    path("views_active_over/<int:user_id>", views.views_active_over, name="views_active_over"),
     
     
     path("add_bid/<int:user_id>", views.add_bid, name="add_bid"),
     
     path("NewListing/<int:book_id>", views.NewListing, name="NewListing"),
     path("change_listing/<int:listing_id>",views.change_listing, name="change_listing"),
-    path("close_listing/<int:listing_id>", views.close_listing, name="close_listing"),
+    # path("close_listing/<int:listing_id>", views.close_listing, name="close_listing"),
+    path("close_listing", views.close_listing, name="close_listing"),
     
     
     path("addcomment/<int:book_id>", views.add_comment, name="addcomment"),
@@ -64,7 +72,6 @@ urlpatterns = [
     path("In_listing/<int:listing_id>", views.In_listing, name="In_listing"),
     
     path("BookSearchView", views.BookSearchView, name="BookSearchView"),
-    
     path("UserSearchView", views.UserSearchView, name="UserSearchView"),
     
     

@@ -12,8 +12,32 @@
             {% empty %}
                 Không có danh mục nào được tìm thấy
             {% endfor %}
+            <button data-userid="{{ users.id }}"class="btn edit-btn editcategory btn-sm btn-outline-primary">Thêm thể loại mới</button>
+            <div id="edit_category"></div>  
+
         </div>
+        
+
+        {% comment %} <script type="text/javascript" >  
+            function showcommentform() {  
+                var data="Name:<br><input type='text' name='name'><br>Comment:<br><textarea rows='5' cols='50'></textarea><br><input type='submit' value='comment'>";  
+                
+                document.getElementById('mylocation').innerHTML=data;  
+                }  
+                
+                </script>  
+            <form name="myForm">  
+                <input type="button" value="comment" onclick="showcommentform()">  
+                <div id="mylocation"></div>  
+            </form>  {% endcomment %}
+
+
+
+
+
     </div>
+
+
 
 
 {% endblock %}

@@ -71,7 +71,7 @@
                                     {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'bookcase' %}">kho sach cua {{ user.username }}</a></li> {% endcomment %}
                                 {% endif %}
                                 <li class="nav-item"><a class="nav-link" href="{% url 'mailbook' %}">HỘP THƯ</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{% url 'views_active_human' user.id %}">LỊCH SỬ HOẠT ĐỘNG</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'views_active_all' user.id %}">LỊCH SỬ HOẠT ĐỘNG</a></li>
                                 <li class="nav-item"><a class="nav-link" href=" {% url 'logout' %}"  style="float: right;">ĐĂNG SUẤT</a></li>
                             {% else %}
                                 <li class="nav-item justify-content-end" style="float: right;"><a class="nav-link" style="float: right;"  href=" {% url 'login' %}" >ĐĂNG NHẬP</a></li>

@@ -1,7 +1,7 @@
 from dataclasses import field, fields
 from tkinter import Label, Widget
 from django import forms
-from .models import Category , Book, Email,Listing, Comment
+from .models import Category , Book, Email,Listing ,active_all
 
 class NewbookForm(forms.ModelForm):
     class Meta:
@@ -16,7 +16,6 @@ class NewbookForm(forms.ModelForm):
             'category': forms.SelectMultiple(attrs={'class': 'form-control'}),
 
         }
-
 class NewemailForm(forms.ModelForm):
     class Meta:
         model = Email
@@ -27,11 +26,20 @@ class NewemailForm(forms.ModelForm):
             'body': forms.TextInput(attrs={'rows':2, 'class': 'form-control'}),
         }
     
-class CommentForm(forms.ModelForm):
+class CategoryForm(forms.ModelForm):
     class Meta:
-        model = Comment
-        fields = ['comment']
+        model = Category
+        fields = ['name']
         Labels = {
-            'comment': ''
+            'name': ''
         }
-        widgets = {"comment": forms.Textarea(attrs={'rows': 2, 'class': 'form-control', 'maxlength': '1000'})}
+        widgets = {"name": forms.Textarea(attrs={'rows': 2, 'class': 'form-control', 'maxlength': '300'})}
+class CommentsForm(forms.ModelForm):
+    class Meta:
+        model = active_all
+        fields = ['reason']
+        Labels = {
+            'reason': ''
+        }
+        widgets = {"reason": forms.Textarea(attrs={'rows': 2, 'class': 'form-control', 'maxlength': '1000'})}
+    

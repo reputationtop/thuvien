@@ -93,21 +93,21 @@
     
         </div>
         <div class="container">
-            <h4>list coment :</h4>
+            <h4>Bình luận:</h4>
             {% for comment in comments %}
                 <div class="row border bg-light py-2 mx-0 mx-md-3 mb-3">
                     <div class="col-6">
-                        <strong>{{ comment.user }}</strong>
+                        <strong>{{ comment.performer }}</strong>
                     </div>
                     <div class="col-6 text-right text-muted">
-                        <small><em>{{ comment.time}}</em></small>
+                        <small><em>{{ comment.time_2}}</em></small>
                     </div>
                     <div class="col-xl-12 pt-1">
-                        {{ comment.comment }}
+                        {{ comment.reason }}
                     </div>
                 </div>
             {% empty %}
-                No active coment
+                Hiện chưa có bình luận nào về cuốn sách này
             {% endfor %}
         </div>
     </div>

@@ -1,0 +1,102 @@
+{% extends "library/cation_in.html" %}
+
+{% block title %}all{% endblock %}
+
+
+{% block bodyc %}
+    <style>
+
+    </style>
+    <h1> Sơ lược kho sách</h1>
+    <div>
+
+
+        {% if user.is_superuser %}
+            {% if  users.id == user.id %}
+                
+            
+
+
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>Tên cuốn sách</th>
+                        <th>Thời gian</th>
+                        <th>Trang thái</th>
+                    </tr>
+                    {% for list in  list_all %}
+                        {% if list.dele_listing == False %}
+                            {% if  list.active %}
+                                <tr>
+                                    <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
+                                    <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
+                                    <td>Thời gian trả dự kiến :{{list.convert_date}}</td>
+                                    <td>
+                                        <div>
+                                            <small style="color:green;">Đang mượn</small>
+                                            {% if user.is_superuser %}
+                                                <form action="{% url 'close_listing' list.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-outline-primary btn-sm" style="color:red;">Kết thúc</button>
+                                                </form>
+                                                </button>  
+                                            {% endif %} 
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
+                                    <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
+                                    <td>Lên danh sách núc:{{list.timel}}</td>
+                                    <td><small style="color:blue;">Đang đăng kí</small>
+                                        {% if user.is_superuser %}
+                                            <form action="{% url 'close_listing' list.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn " style="color:red;">Từ chối</button>
+                                            </form>
+                                            <button data-listid="{{ list.id }}"
+                                                class="btn  edit_change ">Chấp nhận
+                                            </button>  
+                                        {% endif %} 
+                
+                
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% else %}
+                            <tr>
+                                <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
+                                <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
+                                <td>{{list.return_date}}</td>
+                                <td><strong style="color:black;">Đã kết thúc</strong></td>
+                            </tr>
+                        {% endif %}
+                
+                
+                    {% endfor %}
+                </table>
+
+
+
+
+            {% else %}
+                <h2 id="posttitle">Kho sách của : {{ users.username }}</h2><br>
+                <div class="money" id="money{{ users.id }}"><strong>  Số dư : {{users.money}}</strong></div>
+                <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ users.id }}"
+                    class="btn edit-btn edit btn-sm btn-outline-primary">Nạp thêm tiền
+                </button><br>
+                <small>Số sách có thể mượn thêm: {{ users.limit_book}}</small>
+                {% include "library/includes//table_book.html" with list_all=list_all %}
+            {% endif %}
+        {% elif users.id == user.id %}
+            <strong>  Số dư : {{users.money}}</strong>
+            <small>Số sách có thể mượn thêm: {{ users.limit_book}}</small>
+            {% include "library/includes//table_book.html" with list_all=list_all %}
+        {% else %}
+            <h1>Lỗi không xác định, quyền hạn của bạn không đủ</h1>
+        {% endif %}
+    </div>
+
+
+{% endblock bodyc%}   

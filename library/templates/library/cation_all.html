@@ -1,196 +1,176 @@
-{% extends "library/layout.html" %}
+{% extends "library/cation_in.html" %}
 
-{% block title %}login {% endblock %}
-{% block body %}
-    <h2 class="text-center">Thông tin chung</h2>  
-    
-    <div class="row text-center">
+{% block title %}all{% endblock %}
 
 
-        <div class="row pb-4 container  col-md-3 col-sm-4">
-            <div class=" isb_padding isb-container flex_img">
-                <div class="col-md-6">
-                    <img style="max-width: 350px;"  src="/library/media/{{user.avatar}}"  class="card-img-top" >
-
-                <div>
-                    <div class="col-sm-2 post-profile-pic" style="background-image: {% if user.avatar is not none %} url('/library/media/{{user.avatar}}') {% else %} url('/library/media/{{user.avatar}}') {% endif %}">
-
-
-                    </div>  
-                    
-                    <strong>Tên : {{user.username}}</strong><br>
-                    {% if user.is_superuser %}
-                        <strong>Bạn là cô giáo:</strong><br>
-    
-                    {% else %}
-                        <strong>  Số dư : {{user.money}}</strong><br>
-                    {% endif %}
-                    {% comment %} <small>Truy cập núc :{{user.date_joined}}</small><br> {% endcomment %}
-                </div>
+{% block bodyc %}
+    <style>
+        #posttitle {
+            font-weight: 500;
+            border-left: 3px solid #ee2c74;
+            padding-left: 10px;
+            font-size: 18px;
+            line-height: 1.5;
+            margin: 0 0 20px;
+            min-height: 27px;
+        }
+    </style>
+    <h1> Thông tin chung</h1>
+    <div>
+        {% if users.id == user.id %}
+            <div>
+                <h2 id="posttitle">Thông tin tài khoản </h2><br>
             </div>
-            <div class="row justify-content-center">
-                <button class="btn btn-sm btn-outline-primary" style="display: block;" id="find_i">Thông tin tài khoản</button>  
-                <button class="btn btn-sm btn-outline-primary" style="display: none;" id="find_a"> thông tin tài khoản</button>  
-                <button class="btn btn-sm btn-outline-primary" id="work_alls">Tất cả hoạt động</button>  
-                <button class="btn btn-sm btn-outline-primary" id="work_coments">Bình luận </button>
-                <button class="btn btn-sm btn-outline-primary" id="work_moneys">Biến động số dư</button>
-                <button class="btn btn-sm btn-outline-primary" id="work_others ">các hoạt động khác</button>  
+        {% else %}
+            <div>
+                <h2 id="posttitle">Thông tin tài khoản : {{users.username}}</h2><br>
             </div>
-        </div>
-
-        <div class=" row align-items-center align-items-center col-md-9 col-sm-8">
-
-            <div id="work_all" style="display: block;">
-                <h4>Tất cả hoạt động</h4><br>
-                <table>
-
-                    {% for active in  all_active %}
-                        {% if active.classify_active == 1 %}
-                            <tr>
-                                <td><a href="{% url 'book' active.item.id%}">{{active.item.namebook}}</a></td>
-                                <td>{{active.time_2}}</td>
-                                <td>{{active.coment_active.comment}}</td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </table>          
-            </div>
-            <div id="work_coment" style="display: none;">
-                <h4>Bình luận :</h4><br>
-                <table>
-                    <tr>
-                        <th>Tên cuốn sách</th>
-                        <th>Thời gian</th>
-                        <th>Nội dung</th>
-                    </tr>
-
-                    {% for active in  all_active %}
-                        {% if active.classify_active == 1 %}
-                            <tr>
-                                <td><a href="{% url 'book' item.id%}">{{active.item.namebook}}</a></td>
-                                <td>{{active.time_2}}</td>
-                                <td>{{active.reason}}</td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </table>
-                <div class="col-10 col-md-8 col-lg-6 pt-2">
-                </div>   
-            </div>
-            <div id="work_money" style="display: none;">
-                <h4>Biến động số dư:</h4><br>
-                <table>
-                    <tr>
-                        <th>Số tiền</th>
-                        <th>Thời gian</th>
-                        <th>Ghi chú</th>
-                    </tr>
-                    {% for active in  all_active %}
-                        {% if active.classify_active == 2 %}
-
-                            <tr>
-                                <td>{{active.money}}</td>
-                                <td>{{active.time_2}}</td>
-                                <td>{{active.reason}}</td>
-                            </tr>
-
-                        {% endif %}
-                    {% endfor %}
-                </table>
-
+        {% endif %}
         
+        <div>
+            <div class="col-md-6">
+                <img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{users.avatar}}"  >
             </div>
+            <div class="border-dark"> 
+                
+                <strong style= "max-width: 100px;overflow: hidden;">Tên : {{users.username}}</strong><br>
+                <strong>  Số dư : {{users.money}}</strong><br>
 
-            <div id="work_other" style="display: none;">
+                {% if users.is_superuser %}
+                    <strong> Chức vụ : Giáo viên:</strong><br>
 
-                <h4>các hoạt động khác</h4><br>
-                <table style="webkit-line-clamp: 1;">
-                    <tr>
-                        <th>người thực hiện</th>
-                        <th>Thời gian</th>
-                        <th>Ghi chú</th>
-                    </tr>
+                {% else %}
 
-                    {% for active in  all_active %}
-                        {% if active.classify_active == 0 %}
-                            <tr>
-                                <td><a href="{% url 'book' active.item.id%}">{{active.item.namebook}}</a></td>
-                                    <td>{{active.time_2}}</td>
-                                    <td>{{active.reason}}</td>
-                                </tr>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
+                    <strong> Chức vụ :Học sinh:</strong><br>
+                    <strong>  Số dư : {{users.money}}</strong><br>
+                {% endif %}
 
-                </table>          
             </div>
         </div>
+
+
     </div>
-    <script language="javascript">
-    
-        document.getElementById("find_a").onclick = function () {
-            document.getElementById("find_a").style.display = 'none';
-            document.getElementById("find_i").style.display = 'block';
+    <div>
+        <div>
+            <h2 id="posttitle">Kho sách:</h2><br>
+        </div>
+        
+        <table>
+            <tr>
+                <th>Số tiền</th>
+                <th>Thời gian</th>
+                <th>Ghi chú</th>
+            </tr>
+            {% for active in  all_active %}
+                {% if active.classify_active == 2 %}
 
-        };
+                    <tr>
+                        <td>{{active.money}}</td>
+                        <td>{{active.time_2}}</td>
+                        <td>{{active.reason}}</td>
+                    </tr>
 
-        document.getElementById("find_i").onclick = function () {
-            document.getElementById("find_i").style.display = 'none';
-            document.getElementById("find_a").style.display = 'block';
+                {% endif %}
+            {% endfor %}
+        </table>
 
 
-        };
+    </div>
+    <div>
+        <h2 id="posttitle">Hộp thư:</h2><br>
+        <table>
+            <tr>
+                <th>Số tiền</th>
+                <th>Thời gian</th>
+                <th>Ghi chú</th>
+            </tr>
+            {% for active in  all_active %}
+                {% if active.classify_active == 2 %}
+
+                    <tr>
+                        <td>{{active.money}}</td>
+                        <td>{{active.time_2}}</td>
+                        <td>{{active.reason}}</td>
+                    </tr>
+
+                {% endif %}
+            {% endfor %}
+        </table>
+
+
+    </div>
+
+    <div>
+        <h2 id="posttitle">Bình luận :</h2><br>
+        <table>
+            <tr>
+                <th>Tên cuốn sách</th>
+                <th>Thời gian</th>
+                <th>Nội dung</th>
+            </tr>
+
+            {% for active in  all_active %}
+                {% if active.classify_active == 1 %}
+                    <tr>
+                        <td><a href="{% url 'book' active.item.id %}">{{active.item.namebook}}</a></td>
+                        <td>{{active.time_2}}</td>
+                        <td>{{active.reason}}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        <div class="col-10 col-md-8 col-lg-6 pt-2">
+        </div>   
+    </div>
+    <div>
+        <h2 id="posttitle">Biến động số dư:</h2><br>
+        <table>
+            <tr>
+                <th>Số tiền</th>
+                <th>Thời gian</th>
+                <th>Ghi chú</th>
+            </tr>
+            {% for active in  all_active %}
+                {% if active.classify_active == 2 %}
+
+                    <tr>
+                        <td>{{active.money}}</td>
+                        <td>{{active.time_2}}</td>
+                        <td>{{active.reason}}</td>
+                    </tr>
+
+                {% endif %}
+            {% endfor %}
+        </table>
+
+
+    </div>
+
+    <div >
+
+        <h2 id="posttitle">các hoạt động khác</h2><br>
+        <table style="webkit-line-clamp: 1;">
+            <tr>
+                <th>người thực hiện</th>
+                <th>Thời gian</th>
+                <th>Ghi chú</th>
+            </tr>
+
+            {% for active in  all_active %}
+                {% if active.classify_active == 0 %}
+                    <tr>
+                        {% comment %} <td><a href="{% url 'book' active.item.id %}">{{active.item.namebook}}</a></td> {% endcomment %}
+                        <td>{{active.performer.namebook}}</a></td>
+                        <td>{{active.time_2}}</td>
+                        <td>{{active.reason}}</td>
+                        
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
+        </table>          
+    </div>
 
 
 
-        document.getElementById("work_alls").onclick = function () {
-            document.getElementById("work_all").style.display = 'none';
-            document.getElementById("work_coment").style.display = 'block';
-            document.getElementById("work_money").style.display = 'block';
-            document.getElementById("work_other").style.display = 'block';
-
-            document.querySelector('#work_all').style.color = '#d93025';
-            document.querySelector('#work_coment').style.color = '#5f6368';
-            document.querySelector('#work_money').style.color = '#5f6368';
-            document.querySelector('#work_other').style.color = '#5f6368';
-
-        };
-
-        document.getElementById("work_coment").onclick = function () {
-            document.getElementById("work_coment").style.display = 'block';
-            document.getElementById("work_money").style.display = 'none';
-            document.getElementById("work_other").style.display = 'none';
-
-            document.querySelector('#work_coment').style.color = '#d93025';
-            document.querySelector('#work_all').style.color = '#5f6368';
-            document.querySelector('#work_money').style.color = '#5f6368';
-            document.querySelector('#work_other').style.color = '#5f6368';
-
-        };
-
-        document.getElementById("work_money").onclick = function () {
-            document.getElementById("work_coment").style.display = 'none';
-            document.getElementById("work_money").style.display = 'block';
-            document.getElementById("work_other").style.display = 'none';
-
-            document.querySelector('#work_money').style.color = '#d93025';
-            document.querySelector('#work_coment').style.color = '#5f6368';
-            document.querySelector('#work_all').style.color = '#5f6368';
-            document.querySelector('#work_other').style.color = '#5f6368';
-
-        };
-
-        document.getElementById("work_other").onclick = function () {
-            document.getElementById("work_coment").style.display = 'block';
-            document.getElementById("work_money").style.display = 'none';
-            document.getElementById("work_other").style.display = 'none';
-
-            document.querySelector('#work_other').style.color = '#d93025';
-            document.querySelector('#work_coment').style.color = '#5f6368';
-            document.querySelector('#work_money').style.color = '#5f6368';
-            document.querySelector('#work_all').style.color = '#5f6368';
-
-        };
-
-    </script>
-{% endblock %}
+{% endblock bodyc%}   

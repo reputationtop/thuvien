@@ -124,19 +124,19 @@ class Listing(models.Model):
         return str(self.active)
     class Meta: 
         ordering = ['-timel']
-class Comment(models.Model):
-    item = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="comments")
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="comments")
-    comment = models.CharField(max_length=1000)
-    timec = models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        return str(self.comment)
-    class Meta:
-        ordering =['-timec']
+# class Comment(models.Model):
+#     item = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="comments")
+#     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="comments")
+#     comment = models.CharField(max_length=1000)
+#     timec = models.DateTimeField(auto_now_add=True)
+#     def __str__(self):
+#         return str(self.comment)
+#     class Meta:
+#         ordering =['-timec']
         
 class Email(models.Model):
-    author = models.ForeignKey(User, on_delete= models.PROTECT, related_name="emails")
-    recipients = models.ForeignKey(User,on_delete= models.PROTECT, related_name="emails_received")
+    author = models.ForeignKey(User, on_delete= models.PROTECT, related_name="emails_box")
+    recipients = models.ForeignKey(User,on_delete= models.PROTECT, related_name="emails_box")
     subject = models.CharField(max_length=255)
     body = models.TextField(blank=True)
     read = models.BooleanField(default=False)
@@ -154,16 +154,16 @@ class Email(models.Model):
 class active_all(models.Model):
     performer = models.ForeignKey(User, on_delete=models.PROTECT, related_name="active_performer",null=False)
     subject_active = models.ForeignKey(User, on_delete=models.PROTECT, related_name="active_subject",default=None,  blank=True, null=True)
-    item = models.ForeignKey(Book ,on_delete=models.PROTECT,related_name="active_listing", default=None,  blank=True, null=True)
+    item = models.ForeignKey(Book ,on_delete=models.PROTECT,related_name="active_comments", default=None,  blank=True, null=True)
     category = models.ForeignKey(Category,on_delete= models.PROTECT, default=None, blank=True, null=True)
-    coment_active= models.ForeignKey(Comment,on_delete= models.PROTECT, default=None, blank=True, null=True)
+    # coment_active= models.ForeignKey(Comment,on_delete= models.PROTECT, default=None, blank=True, null=True)
     classify_active = models.IntegerField(default=0, blank=True, null=False)
 # 1= Comment
 # 2= money
-# 3 =over
+# 0 =over
     money_flow = models.IntegerField(default=0, blank=True)
     money_now = models.IntegerField(default=0, blank=True)
-    reason = models.CharField(max_length=600, default=None, null=True, blank=True)
+    reason = models.CharField(max_length=3000, default=None, null=True, blank=True)
     time_2 = models.DateTimeField(auto_now_add=True)
     class Meta: 
         ordering = ['-time_2']

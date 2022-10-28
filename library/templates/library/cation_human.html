@@ -1,0 +1,50 @@
+{% extends "library/cation_in.html" %}
+
+{% block title %}all{% endblock %}
+
+
+{% block bodyc %}
+    <style>
+
+    </style>
+    {% if users.id == user.id %}
+        <h1> Thông tin tài khoản :</h1>
+    
+    {% else %}
+        <h2 id="posttitle">Thông tin tài khoản : {{users.username}}</h2><br>
+    {% endif %}
+    <div>
+        <div class="col-md-6">
+            <img style="    display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{users.avatar}}"  >
+        </div>
+        <div class="border-dark"> 
+            
+            <strong style= "max-width: 100px;overflow: hidden;">Tên : {{users.username}}</strong><br>
+            
+            {% if users.is_superuser %}
+                <strong> Chức vụ : Giáo viên:</strong><br>
+
+            {% else %}
+                <strong> Chức vụ :Học sinh:</strong><br>
+                {% if users.id == user.id %}
+                    <strong>  Số dư : {{users.money}}</strong>
+                    <small>Số sách có thể mượn thêm: {{ users.limit_book}}</small>
+                {% else %}
+                    {% if user.is_superuser %}
+                        <div class="money" id="money{{ users.id }}"><strong>  Số dư : {{users.money}}</strong></div>
+                        <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ users.id }}"
+                            class="btn edit-btn edit btn-sm btn-outline-primary">Nạp thêm tiền
+                        </button><br>
+                        <small>Số sách có thể mượn thêm: {{ users.limit_book}}</small>
+                    {% endif %}
+                {% endif %}
+                
+            {% endif %}
+
+        </div>
+    </div>
+
+
+
+
+{% endblock bodyc%}   
