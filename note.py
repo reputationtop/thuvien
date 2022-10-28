@@ -1,4 +1,4 @@
-000999
+
 # 4
 
 # Đây là của tôi views.py, để hiển thị các tài khoản người dùng hiện tại
