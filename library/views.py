@@ -544,7 +544,6 @@ def mailbook(request ):
     a_in_mail = Email.objects.filter(recipients=user_profile, archived=True)
     if request.method =="POST":
         maill = NewemailForm(request.POST)
-        maill.save
         if maill.is_valid():
             maill.instance.author = request.user
             maill.save()
@@ -618,7 +617,6 @@ def newemail(request):
         
          
         maill = NewemailForm(request.POST)
-        maill.save
         # Check if form data is valid (server-side)
         if maill.is_valid():
             
@@ -664,20 +662,30 @@ def newemail(request):
 csrf_exempt
 @login_required(login_url='login')
 def views_active_all(request, user_id):
+    x = []
     if request.user.is_superuser:
         users = User.objects.get(pk=user_id)
         # all_active = active_all.objects.filter(subject_active =users).order_by("-time_2")
     else:
         users = request.user
-    active_book = Listing.objects.filter(user=users).order_by("-timel")
-    active_mail = users.emails_box
-    active_coment = active_all.objects.filter(subject_active =users, classify_active=1 ).order_by("-time_2")
-    active_money = active_all.objects.filter(subject_active =users, classify_active=2 ).order_by("-time_2")
-    active_over = active_all.objects.filter(subject_active =users, classify_active =0 ).order_by("-time_2")
+    active_book = Listing.objects.filter(user=users).order_by("-timel")[:5]
+    active_mail = Email.objects.filter( recipients = users).order_by("-time")[:5]
+    active_coment = active_all.objects.filter(subject_active =users, classify_active=1 ).order_by("-time_2")[:5]
+    active_money = active_all.objects.filter(subject_active =users, classify_active=2 ).order_by("-time_2")[:5]
+    active_over = active_all.objects.filter(subject_active =users, classify_active =0 ).order_by("-time_2")[:5]
     return render(request, "library/cation_all.html", {
         # "all_active": all_active,
         "users": users,
         "id_acc": user_id,
+            
+        "active_book": active_book,
+        "active_mail": active_mail ,
+        "active_coment": active_coment,
+        "active_money": active_money,
+        "active_over": active_over ,
+        
+        
+        
     })
 
 csrf_exempt
@@ -696,7 +704,7 @@ def views_active_book(request, user_id):
         acc_login = request.user
         if request.user.is_superuser:
             if acc_login.id == user_id:
-                list_all = Listing.objects.all.order_by("-timel")
+                list_all = Listing.objects.all()
             else:
                 list_all = Listing.objects.filter(user=users).order_by("-timel")
             return render(request, "library/cation_book.html", {
@@ -732,7 +740,6 @@ def views_active_mall(request, user_id):
     
     if request.method =="POST":
         maill = NewemailForm(request.POST)
-        maill.save
         if maill.is_valid():
             maill.instance.author = request.user
             maill.save()

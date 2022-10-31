@@ -4,7 +4,7 @@
 
 
 {% block bodyc %}
-    <style>
+    {% comment %} <style>
         #posttitle {
             font-weight: 500;
             border-left: 3px solid #ee2c74;
@@ -14,7 +14,7 @@
             margin: 0 0 20px;
             min-height: 27px;
         }
-    </style>
+    </style> {% endcomment %}
     <h1> Thông tin chung</h1>
     <div>
         {% if users.id == user.id %}
@@ -55,22 +55,64 @@
             <h2 id="posttitle">Kho sách:</h2><br>
         </div>
         
+
         <table>
             <tr>
-                <th>Số tiền</th>
+                <th></th>
+                <th>Tên cuốn sách</th>
                 <th>Thời gian</th>
-                <th>Ghi chú</th>
+                <th>Trang thái</th>
             </tr>
-            {% for active in  all_active %}
-                {% if active.classify_active == 2 %}
-
+            {% for list in  active_book %}
+                {% if list.dele_listing == False %}
+                    {% if  list.active %}
+                        <tr>
+                            <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
+                            <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
+                            <td>Thời gian trả dự kiến :{{list.convert_date}}</td>
+                            <td>
+                                <div>
+                                    <small style="color:green;">Đang mượn</small>
+                                    {% if user.is_superuser %}
+                                        <form action="{% url 'close_listing' list.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-primary btn-sm" style="color:red;">Kết thúc</button>
+                                        </form>
+                                        </button>  
+                                    {% endif %} 
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
+                            <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
+                            <td>Lên danh sách núc:{{list.timel}}</td>
+                            <td><small style="color:blue;">Đang đăng kí</small>
+                                {% if user.is_superuser %}
+                                    <form action="{% url 'close_listing' list.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn " style="color:red;">Từ chối</button>
+                                    </form>
+                                    <button data-listid="{{ list.id }}"
+                                        class="btn  edit_change ">Chấp nhận
+                                    </button>  
+                                {% endif %} 
+        
+        
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% else %}
                     <tr>
-                        <td>{{active.money}}</td>
-                        <td>{{active.time_2}}</td>
-                        <td>{{active.reason}}</td>
+                        <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
+                        <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
+                        <td>{{list.return_date}}</td>
+                        <td><strong style="color:black;">Đã kết thúc</strong></td>
                     </tr>
-
                 {% endif %}
+        
+        
             {% endfor %}
         </table>
 
@@ -80,20 +122,18 @@
         <h2 id="posttitle">Hộp thư:</h2><br>
         <table>
             <tr>
-                <th>Số tiền</th>
+                <th>Gửi từ </th>
                 <th>Thời gian</th>
-                <th>Ghi chú</th>
+                <th>Tiêu đề </th>
             </tr>
-            {% for active in  all_active %}
-                {% if active.classify_active == 2 %}
-
-                    <tr>
-                        <td>{{active.money}}</td>
-                        <td>{{active.time_2}}</td>
-                        <td>{{active.reason}}</td>
-                    </tr>
-
-                {% endif %}
+            {% for mail  in active_mail %}
+                <a href="{% url 'read_mail' mail.id%}" class="text-decoration-none text-dark">
+                        <tr>
+                            <td>{{mail.author.username}}</td>
+                            <td><small>{{mail.time}}</small></td>
+                            <td>{{mail.subject}}</td>
+                        </tr>
+                </a>
             {% endfor %}
         </table>
 
@@ -106,14 +146,14 @@
             <tr>
                 <th>Tên cuốn sách</th>
                 <th>Thời gian</th>
-                <th>Nội dung</th>
+                <th>Bình luận</th>
             </tr>
 
-            {% for active in  all_active %}
+            {% for active in  active_coment %}
                 {% if active.classify_active == 1 %}
                     <tr>
                         <td><a href="{% url 'book' active.item.id %}">{{active.item.namebook}}</a></td>
-                        <td>{{active.time_2}}</td>
+                        <td>{{active.time_2.day}}</td>
                         <td>{{active.reason}}</td>
                     </tr>
                 {% endif %}
@@ -126,20 +166,18 @@
         <h2 id="posttitle">Biến động số dư:</h2><br>
         <table>
             <tr>
+                <th>Người thực hiện</th>
                 <th>Số tiền</th>
                 <th>Thời gian</th>
                 <th>Ghi chú</th>
             </tr>
-            {% for active in  all_active %}
-                {% if active.classify_active == 2 %}
-
+            {% for active in  active_money %}
                     <tr>
-                        <td>{{active.money}}</td>
+                        <td>{{active.performer.username}}</td>
+                        <td>{{active.money_flow}}</td>
                         <td>{{active.time_2}}</td>
                         <td>{{active.reason}}</td>
                     </tr>
-
-                {% endif %}
             {% endfor %}
         </table>
 
@@ -147,28 +185,27 @@
     </div>
 
     <div >
+            <h2 id="posttitle">các hoạt động khác</h2><br>
+            <table style="webkit-line-clamp: 1;">
+                <tr>
+                    <th>người thực hiện</th>
+                    <th>Thời gian</th>
+                    <th>Ghi chú</th>
+                </tr>
 
-        <h2 id="posttitle">các hoạt động khác</h2><br>
-        <table style="webkit-line-clamp: 1;">
-            <tr>
-                <th>người thực hiện</th>
-                <th>Thời gian</th>
-                <th>Ghi chú</th>
-            </tr>
+                {% for active in  all_active %}
+                    {% if active.classify_active == 0 %}
+                        <tr>
+                            {% comment %} <td><a href="{% url 'book' active.item.id %}">{{active.item.namebook}}</a></td> {% endcomment %}
+                            <td>{{active.performer.username}}</a></td>
+                            <td>{{active.time_2}}</td>
+                            <td>{{active.reason}}</td>
+                            
+                        </tr>
+                    {% endif %}
+                {% endfor %}
 
-            {% for active in  all_active %}
-                {% if active.classify_active == 0 %}
-                    <tr>
-                        {% comment %} <td><a href="{% url 'book' active.item.id %}">{{active.item.namebook}}</a></td> {% endcomment %}
-                        <td>{{active.performer.namebook}}</a></td>
-                        <td>{{active.time_2}}</td>
-                        <td>{{active.reason}}</td>
-                        
-                    </tr>
-                {% endif %}
-            {% endfor %}
-
-        </table>          
+            </table>          
     </div>
 
 

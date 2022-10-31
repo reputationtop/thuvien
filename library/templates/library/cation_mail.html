@@ -12,115 +12,116 @@
     <h1> Hộp thư</h1>
     {% if user.is_authenticated %}
 
-        <div class="text-center">
+        {% comment %} <div class="text-center"> {% endcomment %}
+        <div >
             <button class="btn btn-sm btn-outline-primary" id="inbox">Thư đến</button>
             <button  class="btn btn-sm btn-outline-primary" id="newemail" >Viết thư</button>
             <button class="btn btn-sm btn-outline-primary" id="sent"> <Table>Thư đã gửi</Table></button>
             <button class="btn btn-sm btn-outline-primary" id="archived">Thư đã lưu</button>    
         </div>
-        <div class="container d-flex flex-wrap justify-content-center">
+        <div >
             <div>
         
-                <div class=" row align-items-center align-items-center">
-                    <div id="mysent" style="display: none;">
-                        <h2 id="posttitle">Thư đã gửi:</h2><br>
-                        <table>
-                            <tr>
-                                <th>Gửi đến </th>
-                                <th>Thời gian</th>
-                                <th>Tiêu đề </th>
-                                <th>trạng thái </th>
-                            </tr>
-                            {% for active in  all_active %}
-                                <a href="{% url 'read_mail' sent.id%}" class="text-decoration-none text-dark">
-                                        <tr>
-                                            <td>{{sent.recipients.username}}</td>
-                                            <td><small>{{sent.time}}</small></td>
-                                            <td>{{sent.subject}}</td>
-                                            <td>{% if  sent.read %} &#9745; {% else %} &#9746; {% endif %}</td>
-                                        </tr>
 
-                                </a>
-                            {% endfor %}
-                        </table>
-                    </div>
-                    <div id="archive" style="display: none;">
-                        <h2>Thư đã lưu:</h2><br>
-                        <table>
-                            <h2 id="posttitle">Thư gửi đi đã lưu:</h2><br>
-                            <tr>
-                                <th>Gửi đến </th>
-                                <th>Thời gian</th>
-                                <th>Tiêu đề </th>
-                            </tr>
-                            {% for sent  in a_mysent_mail %}
-                                <a href="{% url 'read_mail' sent.id%}" class="text-decoration-none text-dark">
-                                        <tr>
-                                            <td>{{sent.recipients.username}}</td>
-                                            <td><small>{{sent.time}}</small></td>
-                                            <td>{{sent.subject}}</td>
-                                        </tr>
-                                </a>
-                            {% endfor %}
-                        </table>
-                        <table>
-                            <h2 id="posttitle">Thư gửi đến đã lưu:</h2><br>
-                            <tr>
-                                <th>Gửi từ </th>
-                                <th>Thời gian</th>
-                                <th>Tiêu đề </th>
-                            </tr>
-                            {% for mail  in a_in_mail %}
-                                <a href="{% url 'read_mail' mail.id%}" class="text-decoration-none text-dark">
-                                        <tr>
-                                            <td>{{mail.author.username}}</td>
-                                            <td><small>{{mail.time}}</small></td>
-                                            <td>{{mail.subject}}</td>
-                                        </tr>
-                                </a>
-                            {% endfor %}
-                        </table>
- 
-                    </div>
-                    <div id="mall" style="display: block;">
-                        <h2 id="posttitle">Thư đã nhận:</h2><br>
-                        <table>
-                            <tr>
-                                <th>Gửi từ </th>
-                                <th>Thời gian</th>
-                                <th>Tiêu đề </th>
-                                <th>Trạng thái </th>
-                            </tr>
-                            {% for mail  in in_mail %}
-                                <a href="{% url 'read_mail' mail.id%}" class="text-decoration-none text-dark">
-                                        <tr>
-                                            <td>{{mail.author.username}}</td>
-                                            <td><small>{{mail.time}}</small></td>
-                                            <td>{{mail.subject}}</td>
-                                            <td> <td>{% if  mail.read %} &#9745; {% else %} &#9746; {% endif %}</td></td>
-                                        </tr>
-                                </a>
-                            {% endfor %}
-                        </table>       
-                    </div>
-                    <div id="new_mall" style="display: none;">
-                        <h2 id="posttitle">Thư mới</h2><br>
-                        <div class="form-signin">
-                            <form action="{% url 'mailbook' %}" method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                {% for mail in maill %}
-                                    <div class="form-group">
-                                        {{ mail.label_tag }} {{ mail}}
-                    
-                                    </div>
-                                {% endfor %}
-                                <div class="form-group my-4">
-                                    <button type="submit" class="btn btn-primary btn-customized btn-block">Save</button>
+                <div id="mysent" style="display: none;">
+                    <h2 id="posttitle">Thư đã gửi:</h2><br>
+                    <table>
+                        <tr>
+                            <th>Gửi đến </th>
+                            <th>Thời gian</th>
+                            <th>Tiêu đề </th>
+                            <th>trạng thái </th>
+                        </tr>
+                        {% for active in  all_active %}
+                            <a href="{% url 'read_mail' sent.id%}" class="text-decoration-none text-dark">
+                                    <tr>
+                                        <td>{{sent.recipients.username}}</td>
+                                        <td><small>{{sent.time}}</small></td>
+                                        <td>{{sent.subject}}</td>
+                                        <td>{% if  sent.read %} &#9745; {% else %} &#9746; {% endif %}</td>
+                                    </tr>
+
+                            </a>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div id="archive" style="display: none;">
+                    <h2>Thư đã lưu:</h2><br>
+                    <table>
+                        <h2 id="posttitle">Thư gửi đi đã lưu:</h2><br>
+                        <tr>
+                            <th>Gửi đến </th>
+                            <th>Thời gian</th>
+                            <th>Tiêu đề </th>
+                        </tr>
+                        {% for sent  in a_mysent_mail %}
+                            <a href="{% url 'read_mail' sent.id%}" class="text-decoration-none text-dark">
+                                    <tr>
+                                        <td>{{sent.recipients.username}}</td>
+                                        <td><small>{{sent.time}}</small></td>
+                                        <td>{{sent.subject}}</td>
+                                    </tr>
+                            </a>
+                        {% endfor %}
+                    </table>
+                    <table>
+                        <h2 id="posttitle">Thư gửi đến đã lưu:</h2><br>
+                        <tr>
+                            <th>Gửi từ </th>
+                            <th>Thời gian</th>
+                            <th>Tiêu đề </th>
+                        </tr>
+                        {% for mail  in a_in_mail %}
+                            <a href="{% url 'read_mail' mail.id%}" class="text-decoration-none text-dark">
+                                    <tr>
+                                        <td>{{mail.author.username}}</td>
+                                        <td><small>{{mail.time}}</small></td>
+                                        <td>{{mail.subject}}</td>
+                                    </tr>
+                            </a>
+                        {% endfor %}
+                    </table>
+
+                </div>
+                <div id="mall" style="display: block;">
+                    <h2 id="posttitle">Thư đã nhận:</h2><br>
+                    <table>
+                        <tr>
+                            <th>Gửi từ </th>
+                            <th>Thời gian</th>
+                            <th>Tiêu đề </th>
+                            <th>Trạng thái </th>
+                        </tr>
+                        {% for mail  in in_mail %}
+                            <a href="{% url 'read_mail' mail.id%}" class="text-decoration-none text-dark">
+                                    <tr>
+                                        <td>{{mail.author.username}}</td>
+                                        <td><small>{{mail.time}}</small></td>
+                                        <td>{{mail.subject}}</td>
+                                        <td> <td>{% if  mail.read %} &#9745; {% else %} &#9746; {% endif %}</td></td>
+                                    </tr>
+                            </a>
+                        {% endfor %}
+                    </table>       
+                </div>
+                <div id="new_mall" style="display: none;">
+                    <h2 id="posttitle">Thư mới</h2><br>
+                    <div class="form-signin">
+                        <form action="{% url 'mailbook' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% for mail in maill %}
+                                <div class="form-group">
+                                    {{ mail.label_tag }} {{ mail}}
+                
                                 </div>
-                            </form>
-                        </div> 
-        
-                    </div>
+                            {% endfor %}
+                            <div class="form-group my-4">
+                                <button type="submit" class="btn btn-primary btn-customized btn-block">Save</button>
+                            </div>
+                        </form>
+                    </div> 
+    
+                </div>
                 <script language="javascript">
             
                     document.getElementById("inbox").onclick = function () {

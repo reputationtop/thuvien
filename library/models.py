@@ -135,8 +135,8 @@ class Listing(models.Model):
 #         ordering =['-timec']
         
 class Email(models.Model):
-    author = models.ForeignKey(User, on_delete= models.PROTECT, related_name="emails_box")
-    recipients = models.ForeignKey(User,on_delete= models.PROTECT, related_name="emails_box")
+    author = models.ForeignKey(User, on_delete= models.PROTECT, related_name="emails_in")
+    recipients = models.ForeignKey(User,on_delete= models.PROTECT, related_name="emails_received")
     subject = models.CharField(max_length=255)
     body = models.TextField(blank=True)
     read = models.BooleanField(default=False)

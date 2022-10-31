@@ -31,13 +31,13 @@
             </tr>
 
             {% for comment in  comments %}
-                {% if active.classify_active == 1 %}
+
                     <tr>
                         <td><a href="{% url 'book' comment.item.id%}">{{comment.item.namebook}}</a></td>
                         <td>{{comment.time_2}}</td>
                         <td>{{comment.reason}}</td>
                     </tr>
-                {% endif %}
+
             {% endfor %}
         </table>
         </div>   
