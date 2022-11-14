@@ -3,8 +3,8 @@
     <tr>
         <th></th>
         <th>Tên cuốn sách</th>
-        <th>Thời gian</th>
         <th>Trang thái</th>
+        <th>Thời gian</th>
     </tr>
     {% for list in  list_all %}
         {% if list.dele_listing == False %}
@@ -12,49 +12,47 @@
                 <tr>
                     <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
                     <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
-                    <td>Thời gian trả dự kiến :{{list.convert_date}}</td>
+                    
                     <td>
-                        <div>
-                            <small style="color:green;">Đang mượn</small>
+                        <div class=" flex_img">
+                            
                             {% if user.is_superuser %}
                                 <button data-listid="{{ list.id }}"   class="btn close-book " style="color:red" name="close_cation">Kết thúc</button> 
-                                {% comment %} <form id="edit-post-form" class="card-text" style="margin-top: 1rem; margin-bottom: 1.6rem">
-                                    <div>
-                                        <textarea 
-                                            id="edit-post-textarea">${contentDiv.innerHTML}</textarea>
-                                    </div>
-                                    <input type="submit" class="btn btn-primary post-submit" value="Save"/>
-                                </form> {% endcomment %}
-
+                            {% else %}
+                                <small style="color:green;">Đang mượn</small>
                             {% endif %} 
                         </div>
                     </td>
+                    <td>Hạn trả :{{list.convert_date}}</td>
                 </tr>
             {% else %}
                 <tr>
                     <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
                     <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
-                    <td>Lên danh sách núc:{{list.timel}}</td>
-                    <td><small style="color:blue;">Đang đăng kí</small>
-                        <div>
+                    
+                    <td>
+                        <div class=" flex_img">
                             {% if user.is_superuser %}
                                 <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
                                 <div id="list{{ list.id }}"></div> 
                                 <button data-listid="{{ list.id }}"
-                                    class="btn  edit_change " >Chấp nhận
+                                    class="btn  edit_change " style="color:blue;" >Chấp nhận
                                 </button>  
-                            {% endif %}     
+                            {% else %}
+                                <small style="color:blue;">Đang đăng kí</small>
+                            {% endif %}                            
                         </div>
 
                     </td>
+                    <td>{{list.timel}}</td>
                 </tr>
             {% endif %}
         {% else %}
             <tr>
                 <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
                 <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
-                <td>{{list.return_date}}</td>
                 <td><strong style="color:black;">Đã kết thúc</strong></td>
+                <td>{{list.return_date}}</td>
             </tr>
         {% endif %}
             <style></style>

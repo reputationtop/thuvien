@@ -15,36 +15,41 @@
             min-height: 27px;
         } {% endcomment %}
     </style>
-        {% if user.is_superuser %}
-            <h2 id="posttitle">các hoạt động khác của tài khoản : {{users.username}}</h2><br>
-        {% else %}
-            <h2 id="posttitle">các hoạt động khác</h2><br>
-        {% endif %}
-        <div>
+    {% if  active_over %}
+            {% if user.is_superuser %}
+                <h2 id="posttitle">các hoạt động khác của tài khoản : {{users.username}}</h2><br>
+            {% else %}
+                <h2 id="posttitle">các hoạt động khác</h2><br>
+            {% endif %}
             <div>
-                {% if user.is_superuser or user.id == users.id %}
-                    <table style="webkit-line-clamp: 1;">
-                        <tr>
-                            <th>người thực hiện</th>
-                            <th>Thời gian</th>
-                            <th>Ghi chú</th>
-                        </tr>
-                        {% for active in  active_over %}
-                                <tr>
-                                    <td>{% if active.performer.id == user.id %}Bạn là người thực hiện.{% elif active.performer.id == users.id %}Tự thục hiện{% else %}<a href="{% url 'views_active_all' active.performer.id %}">{{active.performer}}</a>{% endif %}</td>
-                                    <td>{{active.time_2}}</td>
-                                    <td>{{active.reason}}</td>
-                                </tr>
-                        {% endfor %}
-            
-                    </table>   
-                {% else %}
-                    <h1>Quyền hạn không đủ</h1>
-                {% endif %}
+                <div>
+                    {% if user.is_superuser or user.id == users.id %}
+                        <table style="webkit-line-clamp: 1;">
+                            <tr>
+                                <th>người thực hiện</th>
+                                <th>Thời gian</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                            {% for active in  active_over %}
+                                    <tr>
+                                        <td>{% if active.performer.id == user.id %}Bạn là người thực hiện.{% elif active.performer.id == users.id %}Tự thục hiện{% else %}<a href="{% url 'views_active_all' active.performer.id %}">{{active.performer}}</a>{% endif %}</td>
+                                        <td>{{active.time_2}}</td>
+                                        <td>{{active.reason}}</td>
+                                    </tr>
+                            {% endfor %}
+                
+                        </table>   
+                    {% else %}
+                        <h1>Quyền hạn không đủ</h1>
+                    {% endif %}
 
 
-            </div>       
-        </div>
+                </div>       
+            </div>    
+    {% else %}
+        <strong style="color:red;"> không có hoạt động đặc biệt !!!</strong>
+    {% endif %}
+
 
 
 

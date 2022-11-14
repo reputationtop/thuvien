@@ -9,13 +9,19 @@
         {% if user.is_superuser or user.id == users.id %}
             <div class=" col-md-3 col-sm-4">
                 <div class="row justify-content-center">
-                    <div class=" flex_img">
+                    <div class=" flex_img" style="background-color: black;">
                         <div class="col-md-6">
                             <img style="    display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{users.avatar}}"  >
                         </div>
                         <div> 
+                            {% if user.id == users.id %}
+                                <div style="color: #fff; opacity: .7;">Tài khoản :</div>
+                                <div style= "max-width: 80px;overflow: hidden;text-overflow: ellipsis; font-weight: 800; color: #fff;"> {{users.username}}</div>
+                            {% else %}
+                                <div style="color: #fff; opacity: .7" >Tài khoản của :</div>
+                                <div style= "max-width: 80px;overflow: hidden;text-overflow: ellipsis; font-weight: 800; color: #fff;"> {{users.username}}</div>
+                            {% endif %}
                             
-                            <strong style= "max-width: 100px;overflow: hidden;">Tên : {{users.username}}</strong><br>
                             {% comment %} {% if user.is_superuser %}
                                 <strong>Bạn là cô giáo:</strong><br>
             
@@ -26,13 +32,13 @@
                         </div>
                     </div>
                     {% if user.is_superuser or user.id == users.id %}
-                        <a class="btn btn-sm btn-outline-primary" href="{% url 'views_active_all' id_acc %}" id="work_alls">Thông tin chung</a>   
-                        <a class="btn btn-sm btn-outline-primary" href="{% url 'views_active_human' id_acc%}" id="Inform">Thông tin tài khoản</a>  
-                        <a class="btn btn-sm btn-outline-primary" href="{% url 'views_active_book' id_acc%}" id="work_alls">Kho sách</a>  
-                        <a class="btn btn-sm btn-outline-primary" href="{% url 'views_active_mall' id_acc%}" id="work_alls">Hộp thư</a>  
-                        <a class="btn btn-sm btn-outline-primary" href="{% url 'views_active_coment' id_acc%}" id="work_coments">Bình luận </a>
-                        <a class="btn btn-sm btn-outline-primary" href="{% url 'views_active_money' id_acc%}" id="work_moneys">Biến động số dư</a>
-                        <a class="btn btn-sm btn-outline-primary" href="{% url 'views_active_over' id_acc%}" id="work_others ">các hoạt động khác</a> 
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'views_active_all' id_acc %}" id="work_alls">Thông tin chung</a>   
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'views_active_human' id_acc%}" id="Inform">Thông tin tài khoản</a>  
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'views_active_book' id_acc%}" id="work_alls">Kho sách</a>  
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'views_active_mall' id_acc%}" id="work_alls">Hộp thư</a>  
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'views_active_coment' id_acc%}" id="work_coments">Bình luận </a>
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'views_active_money' id_acc%}" id="work_moneys">Biến động số dư</a>
+                        <a class="btn btn-sm btn-outline-secondary " href="{% url 'views_active_over' id_acc%}" id="work_others ">các hoạt động khác</a> 
                     {% endif %}
                     
 
@@ -40,7 +46,7 @@
 
                 </div>
             </div>
-            <div class="col-md-9 col-sm-8">
+            <div  class="col-md-9 col-sm-8 ">
                 
                 {% block bodyc %}
                 {% endblock bodyc%}     

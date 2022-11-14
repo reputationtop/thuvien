@@ -4,20 +4,21 @@
 
 
 {% block bodyc %}
-    {% comment %} <style>
-        #posttitle {
-            font-weight: 500;
-            border-left: 3px solid #ee2c74;
-            padding-left: 10px;
-            font-size: 18px;
-            line-height: 1.5;
-            margin: 0 0 20px;
-            min-height: 27px;
-        } {% endcomment %}
+    <style>
     </style>
-    <h1>Biến động sô dư</h1>
-        <div>
-            <h2 id="posttitle">Biến động số dư:</h2><br>
+
+    <div>
+        {% if all_active %}
+
+
+            {% if user.is_superuser %}
+                <h2 id="posttitle">Biến động số dư: {{users.username}}</h2><br>
+            {% else %}
+                <h2 id="posttitle">Biến động số dư:</h2><br>
+            {% endif %}
+
+
+            
             <table>
                 <tr>
                     <th>Số tiền</th>
@@ -32,10 +33,15 @@
                             <td>{{active.reason}}</td>
                         </tr>
                 {% endfor %}
-            </table>
+            </table>            
+        {% else %}
+            <strong style="color:red;"> Không có biến động số dư</strong>
+        {% endif %}
+        
 
 
-        </div>
+
+    </div>
 
 
 

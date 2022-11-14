@@ -9,16 +9,15 @@
     </style>
     <h1> Sơ lược kho sách</h1>
     <div>
-        {% if list_all %}
+        {% if book_like %}
             {% if user.is_superuser %}
                 {% if  users.id == user.id %}
                     <table>
                         <tr>
                             <th></th>
                             <th>Tên cuốn sách</th>
-                            
-                            <th>Trang thái</th>
-                            <th>Thời gian</th>
+                            <th>Mô tả</th>
+                            <th>Số lượng</th>
                         </tr>
                         {% for list in  list_all %}
                             {% if list.dele_listing == False %}

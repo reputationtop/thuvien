@@ -15,32 +15,35 @@
             min-height: 27px;
         } {% endcomment %}
     </style>
-    {% if  user.is_superuser %}
-        <h1> Tất cả coment của:{{ users.username }}</h1>
-    {% else %}
-        <h1> Tất cả coment:</h1>
-    {% endif %}
-
 
     <div>
-        <table>
-            <tr>
-                <th>Tên cuốn sách</th>
-                <th>Thời gian</th>
-                <th>Nội dung coment</th>
-            </tr>
+        {% if  comments %}
+            {% if  user.is_superuser %}
+                <h1> Tất cả bình luận của:{{ users.username }}</h1>
+            {% else %}
+                <h1> Tất cả bình luận :</h1>
+            {% endif %}
+            <table>
+                <tr>
+                    <th>Tên cuốn sách</th>
+                    <th>Thời gian</th>
+                    <th>Bình luận</th>
+                </tr>
 
-            {% for comment in  comments %}
+                {% for comment in  comments %}
 
-                    <tr>
-                        <td><a href="{% url 'book' comment.item.id%}">{{comment.item.namebook}}</a></td>
-                        <td>{{comment.time_2}}</td>
-                        <td>{{comment.reason}}</td>
-                    </tr>
+                        <tr>
+                            <td><a href="{% url 'book' comment.item.id%}">{{comment.item.namebook}}</a></td>
+                            <td>{{comment.time_2}}</td>
+                            <td>{{comment.reason}}</td>
+                        </tr>
 
-            {% endfor %}
-        </table>
-        </div>   
+                {% endfor %}
+            </table>         
+        {% else %}
+            <h1>Tài khoản <strong> {{ users.username }}</strong> chưa có bình luận nào</h1>    
+        {% endif %}
+
     </div>
 
 

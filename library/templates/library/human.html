@@ -38,13 +38,13 @@
                                             <small>Cược :{{ list_a.item.bid }}0 V.N.D</small>
                                             <div id="list{{ list_a.id }}"></div>                                            
     
-                                            <form action="{% url 'close_listing' list_a.id %}" method="post">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-outline-primary btn-sm justify-content-center" style="color:red;">Xóa khỏi danh sách</button>
-                                            </form>
-                                            <button data-listid="{{ list_a.id }}"
-                                                class="btn  edit_change btn-sm btn-outline-primary justify-content-center">Chấp nhận cho mượn
-                                            </button>                                        
+                                            {% if user.is_superuser %}
+                                                <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
+                                                <div id="list{{ list.id }}"></div> 
+                                                <button data-listid="{{ list.id }}"
+                                                    class="btn  edit_change " >Chấp nhận
+                                                </button>  
+                                            {% endif %}                                        
                                         </p>
     
     
@@ -67,10 +67,12 @@
                                                 <small>Tiền dự kiến ban đầu phải trả  : {{ lista_i.action_bid}}</small>
                                                 <small>Thời gian trả dự kiến : {{ lista_i.timel }}</small>
                                             </a>
-                                            <form action="{% url 'close_listing' lista_i.id %}" method="post">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-outline-primary btn-sm" style="color:red;">Xóa khỏi danh sách</button>
-                                            </form>
+                                            
+
+
+                                            <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
+
+
                                         </p>
                                     
                                     {% endfor %}

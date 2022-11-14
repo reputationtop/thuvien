@@ -15,7 +15,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     money =models.IntegerField(default=0, blank=True)
     avatar = models.ImageField(upload_to="avatar", null=True, blank=True)
-    limit_book = models.IntegerField(default=7,blank=True)
+    limit_book = models.IntegerField(default=10,blank=True)
     pass
     class Meta:
         ordering = ['-date_joined']
@@ -63,6 +63,9 @@ class Book(models.Model):
     def num_listing(self):
         """ tra ve so luong sach da cho vao danh sach muon"""
         return self.listing.all().count()
+    # def id_human(self):
+    #     """ tra ve so luong sach da cho vao danh sach muon"""
+    #     return self.listing.all().count()
     def fix_active(self):
         """ kiem tra xeem trong kho con sach khong """
         if self.num_listing < self.numbe_book:

@@ -27,25 +27,15 @@ import datetime
 
 
 def index(request):
-
-    # print(Book.objects.all())
     if request.user.is_superuser:
         all_book = Book.objects.all().order_by("-timeb")
-
+        out_read = offer_book( None)
+    elif request.user.is_authenticated:
+        all_book = Book.objects.filter(dele_book = False).exclude(numbe_book=0).order_by("-timeb")
+        # users = request.user
+        out_read = offer_book(request.user.id)
     else:
-        # thisbook =Book.objects.exclude(numbe_book=0,dele_book = True).order_by("-timeb")
-        all_book = Book.objects.exclude(numbe_book=0,dele_book = True).order_by("-timeb")
-        # for lis_t in thisbook :
-        #     all_book = all_book.update(lis_t)
-        #     n += 1
-        #     if sum > 5:
-        #         break
-        # all_book = arr.array(0, thisbook)
-
-    if request.user.is_authenticated:
-        user = request.user
-        out_read = offer_book(user.id)
-    else:
+        all_book = Book.objects.filter(dele_book = False).exclude(numbe_book=0).order_by("-timeb")
         out_read = offer_book( None)
     # print("is book")
     # print(out_read) 
@@ -60,52 +50,93 @@ def index(request):
 def offer_book(user_id):
     b = []
     cz = []
+    bz = []
+    x = []
     if user_id is not None:
+        # chọn người truy cập nếu có
         users = User.objects.get(pk=user_id)
+        
+        # chọn danh sách những sách họ đang mượn,lên danh sách để loại bỏ đề xuất
 
+        list_hiden = Listing.objects.filter(user=users ,dele_listing = False)
+        if list_hiden is not None:
 
-        list_add = Listing.objects.filter(user=users).order_by("-timel")[:10]
-        if list_add is not None:
-            list_add = Listing.objects.all().order_by("-timel")
-            for list in list_add :
+            for list in list_hiden :
                 
+                my_id = list.item.id
+                # bz là danh sách những cuốn sách cần loại bỏ
+                bz.append(my_id) 
+        else:
+            bz =None
+        # chọn 10 danh sách gần nhất của người dùng để lấy thể loại đề xuất
+        list_add = Listing.objects.filter(user=users).order_by("-timel")[:10]
+        # nếu danh sách có tồn tại 
+        if list_add is not None:
+            for list in list_add :
+                # mylist là thể loại của từng cốn sách đã mượn và lên danh sách
                 mylist = list.item.category.all()
+                # b là tập hợp của các thể loại
                 b += mylist
         else:
+            list_add = Listing.objects.all().order_by("-timel")[:30]
             for list in list_add :
                 
                 mylist = list.item.category.all()
                 b += mylist
     else:
+        # chọn 30 danh sách gần nhất của người dùng hệ thống để lấy thể loại đề xuất
         list_add = Listing.objects.all().order_by("-timel")
         for list in list_add :
             
             mylist = list.item.category.all()
             b += mylist
     mystring_b =str( ",".join([str(char) for char in b]))
-    print("test")
+
     len_xyz = len(Counter(mystring_b.split(",")))
     zyx =  Counter(mystring_b.split(","))
-    print(zyx)
     if len_xyz <= 5 :
         for i in range(len_xyz):
             cz.append(zyx.most_common()[i][0])
+    # elif len_xyz == 0:
+    #     cz = None
     else: 
         for i in range(5):
             cz.append(zyx.most_common()[i][0])
     # print(c)
 
-    x = []
-    all_book = Book.objects.all()
-    for i_a in cz:
-        category_id = Category.objects.get(name = i_a)
-        all_book = all_book.filter( category=category_id.id ).order_by("-timeb")
+    # chọn tất cả những quyển sách còn để đề xuất
+    all_book = Book.objects.exclude(numbe_book = 0)
+    print("alllll")
+    print(len(all_book))
+    if bz is not None:
+         for ex in bz:
+            #  loại bỏ những quyển sách đang mượn
+            all_book = all_book.exclude(id=ex)
+            if len(all_book) < 11:
+                return set(all_book[:10])
+    print(len(all_book))
+    try :
+        for i_a in cz:
+            if i_a is not None:
+                category_id = Category.objects.get(name = i_a)
+                all_book = all_book.filter( category=category_id.id ).order_by("-timeb")
 
-        for i in all_book:
-            x.append(i)
+                for i in all_book:
+                    x.append(i)
+                    if len(set(x)) == 11:
+                        return set(x)
+                print("x for")
+                print(len(x))
+    except:
+        x = all_book
+    if len(set(x)) < 10:
+        return set(x)
+    
     y = set(x[:10])
-    # print(x)
     return y
+
+
+    
     
         
 csrf_exempt
@@ -184,8 +215,8 @@ def newbook(request):
 def del_book(request, book_id):
     book_del = Book.objects.filter(pk=book_id)
     if request.method == 'POST':
-        if request.user.is_authenticated:
-            if request.user.is_superuser:
+        if request.user.is_superuser:
+            if"close_book" in request.POST:
                 book_del.dele_book = True
                 reasons = "xóa sách"
                 active_a = active_all.objects.create(performer=request.user,subject_active=request.user,item = book_del,reason = reasons)
@@ -193,13 +224,58 @@ def del_book(request, book_id):
                 book_del.save
                 messages.success(request, 'Đã ẩn sách khoi thu vien')
                 return HttpResponseRedirect(reverse("index"))  
+
+            if"opent_book" in request.POST:
+                book_del.dele_book = True
+                reasons = "khôi phục sách"
+                active_a = active_all.objects.create(performer=request.user,subject_active=request.user,item = book_del,reason = reasons)
+                active_a.save()
+                book_del.save
+                messages.success(request, 'Đã ẩn sách khoi thu vien')
+                return HttpResponseRedirect(reverse("index"))
+            
+            
+            if"more_book" in request.POST:
+                number_book = int(request.POST["num_book"])
+                book_del.dele_book = True
+                reasons = "xóa sách"
+                
+            if"lose_book" in request.POST:
+                book_del.numbe_book = int(request.POST["num_book"])
+                book_del.dele_book = True
+                reasons = "xóa sách"
+                active_a = active_all.objects.create(performer=request.user,subject_active=request.user,item = book_del,reason = reasons)
+                active_a.save()
+                book_del.save
+                messages.success(request, 'Đã ẩn sách khoi thu vien')
+                return HttpResponseRedirect(reverse("index"))
+
         else:
             messages.error(request, 'bạn phải đăng nhập tài khoản giáo viên để thực hiện thao tác này')
             return HttpResponseRedirect(reverse("index"))
-    messages.error(request, 'hãy thử lại')
-    return HttpResponseRedirect(reverse("index"))
+            if"change" in request.POST:
+                number_book = int(request.POST["num_date"])
+                x = datetime.datetime.now()
+                listing.convert_date = x + datetime.timedelta(days=date)
 
-
+                if book.bid <= 30000: 
+                    listing.bid_date = 300
+                else:
+                    
+                    listing.bid_date = (listing.item.bid /100)
+                if date >=7 and date <= 90:
+                    listing.action_bid = round(((date//7)*4 + (date%7)/(2/3))*listing.bid_date, -2)
+                elif date<7 and date :
+                    listing.action_bid = round(((date//7)*4 + (date%7)/(2/3))*listing.bid_date, -2)
+                else:
+                    messages.error(request, 'Lỗi hãy thử lại')
+                                           
+                    return Is_listing(request)
+                
+                reasons = "Đã them sách vao danh sach muon"
+                active_a = active_all.objects.create(performer=request.user, subject_active = request.user,item = book,money_flow = 0,money_now= listing.user.money, classify_active = 2,reason = reasons)
+                active_a.save()
+                book.save()
 
 
 
@@ -207,20 +283,27 @@ def del_book(request, book_id):
 def Is_listing(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
-            list_add = Listing.objects.filter(active=False, dele_listing=False)
-            list_in = Listing.objects.filter(active=True , dele_listing=False)
-            return render(request, "library/list_add.html", {
-                "list_add": list_add,
-                "list_in": list_in,
-            })
+            all_book = Book.objects.all().order_by("-timeb")
+            list_all = Listing.objects.all()
+            like = None
+
         else:
-            list_add = Listing.objects.filter(user=request.user, active=False , dele_listing=False)
-            list_in = Listing.objects.filter(user=request.user, active=True, dele_listing=False)
-            return render(request, "library/list_add.html", {
-                "list_add": list_add,
-                "list_in": list_in,
-            })
-            
+
+            list_all = Listing.objects.filter(user=request.user)
+            like = request.user.listlike.all()
+            all_book =  offer_book(request.user.id)
+            for ex in list_all:
+                like = like.exclude(id=ex.item.id)
+        return render(request, "library/list_add.html", {
+            "list_all": list_all,
+            "all_book": all_book,
+            "like": like,
+
+        })
+    else:
+        messages.error(request, 'hãy thử lại')
+        return HttpResponseRedirect(reverse("index"))
+        
             
 @login_required(login_url='login')    
 def In_listing(request, listing_id):
@@ -307,7 +390,7 @@ def change_listing(request, listing_id):
                 
                 reasons = "Đã them sách vao danh sach muon"
                 
-                active_a = active_all.objects.create(performer=request.user, subject_active = request.user,item = book,money_flow = -book.bid,money_now=User_acc.money, classify_active = 2,reason = reasons)
+                active_a = active_all.objects.create(performer=request.user, subject_active = request.user,item = book,money_flow = 0,money_now= listing.user.money, classify_active = 2,reason = reasons)
                 active_a.save()
             
                 
@@ -370,7 +453,7 @@ def close_listing(request):
                 book.numbe_book = book.numbe_book + 1
                 users.money = users.money + book.bid
                 users.limit_book = users.limit_book +1
-                reasons = "Ket thuc hanh dong muon"
+                reasons = "Kết thúc hành động mượn"
                 active_a = active_all.objects.create(performer=request.user,subject_active =users,item =book,money_flow = book.bid,reason =reasons)
 
                 listing.dele_listing = True
@@ -384,7 +467,7 @@ def close_listing(request):
                     users.money = users.money
                 book.numbe_book = book.numbe_book + 1
                 users.limit_book = users.limit_book +1
-                reasons = "Ket thuc hanh dong muon"
+                reasons = "Kết thúc hành động mượn"
                 active_a = active_all.objects.create(performer=request.user,subject_active =users,item =book,money_flow = book.bid,money_now=users.money,reason =reasons)
                 listing.dele_listing = True
             active_a.save()  
@@ -397,7 +480,7 @@ def close_listing(request):
                 return Is_listing(request)
             else:
                 return HttpResponseRedirect(reverse("index"))
-        except Listing.DoesNotExist:
+        except:
             # return JsonResponse({"error": "Hãy kiểm tra lại"})
             messages.error(request, 'Hãy kiểm tra lại ')
             if"close_cation" in request.PUT:
@@ -413,7 +496,7 @@ def close_listing(request):
             users.limit_book = users.limit_book +1
             users.money = users.money + book.bid -1000
             listing.dele_listing = True
-            reasons = "Ket thuc hanh dong muon"
+            reasons = "Kết thúc hành động mượn"
             active_a = active_all.objects.create(performer=request.user,subject_active =users,item =book,money_flow = book.bid,money_now=users.money,reason =reasons)
             active_a.save()   
             users.save()
@@ -449,7 +532,7 @@ def changelike(request, book_id):
         #     book.likes.add(request.user)
         
         # return HttpResponseRedirect(reverse("book", args=(book_id,)))
-        classify_active =1
+
 def is_book(request, book_id):
     book = Book.objects.get(pk=book_id)
     
@@ -490,18 +573,22 @@ def is_book(request, book_id):
     })
 @login_required(login_url='login')
 def all_user(request):
-    
-    
     if request.user.is_superuser:
-        studen = User.objects.filter(is_superuser=False)
-        teacher = User.objects.filter(is_superuser=True)
+        all_list_user = User.objects.filter(is_superuser=False)
+        
+        return render(request, "library/list_human.html", {
+            "all_list_user": all_list_user,
+        })
+        
+        # studen = User.objects.filter(is_superuser=False)
+        # teacher = User.objects.filter(is_superuser=True)
     else:
         messages.error(request, 'bạn phải đăng nhập tài khoản giáo viên để thực hiện thao tác này')
         return HttpResponseRedirect(reverse("index"))
-    return render(request, "library/list_human.html", {
-        "studen": studen,
-        "teacher": teacher,
-    })
+    # return render(request, "library/list_human.html", {
+    #     "studen": studen,
+    #     "teacher": teacher,
+    # })
 csrf_exempt
 @login_required(login_url='login')
 def UserSearchView(request):
@@ -665,7 +752,22 @@ def views_active_all(request, user_id):
     x = []
     if request.user.is_superuser:
         users = User.objects.get(pk=user_id)
-        # all_active = active_all.objects.filter(subject_active =users).order_by("-time_2")
+        if request.user.id == user_id :
+            active_book = Listing.objects.all()[:5]
+            active_mail = Email.objects.filter( recipients = users).order_by("-time")[:5]
+            active_coment = active_all.objects.filter(subject_active =users, classify_active=1 ).order_by("-time_2")[:5]
+            active_money = active_all.objects.all()[:5]
+            active_over = active_all.objects.all()[:5]
+            return render(request, "library/cation_all.html", {
+                # "all_active": all_active,
+                "users": users,
+                "id_acc": user_id,
+                "active_book": active_book,
+                "active_mail": active_mail ,
+                "active_coment": active_coment,
+                "active_money": active_money,
+                "active_over": active_over ,
+            })
     else:
         users = request.user
     active_book = Listing.objects.filter(user=users).order_by("-timel")[:5]
@@ -677,7 +779,6 @@ def views_active_all(request, user_id):
         # "all_active": all_active,
         "users": users,
         "id_acc": user_id,
-            
         "active_book": active_book,
         "active_mail": active_mail ,
         "active_coment": active_coment,
@@ -831,6 +932,9 @@ def add_bid(request, user_id):
                 money_in = int(add_money) + users.money
                 print(money_in)
                 # user.money = money_in
+                reasons = "nạp tiền "
+                active_a = active_all.objects.create(performer=request.user, subject_active = users,money_flow = int(add_money),money_now= money_in, classify_active = 2,reason = reasons)
+                active_a.save()
                 users.money=money_in
                 users.save()
                 messages.success(request, 'nap tien thanh cong')

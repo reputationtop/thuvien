@@ -54,9 +54,11 @@ document.addEventListener('DOMContentLoaded', function() {
           </form>`
       }
   })
+
+
   document.querySelectorAll('.close-book').forEach(btn => {
     btn.onclick = function () {
-      alert("ẩn quyển sách");
+      alert("kết thúc danh sách");
       fetch('/close_listing', {
         method:'PUT',
         body: JSON.stringify({list_id:btn.dataset.listid})
@@ -93,3 +95,4 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
 });
+

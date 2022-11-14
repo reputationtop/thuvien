@@ -3,196 +3,201 @@
 {% block title %}Quản lí sách{% endblock %}
 {% block body %}
     <div class="row pb-4 justify-content-center">
-        {% if  user.is_authenticated %}
-      
+        <div>
+            {% if  user.is_authenticated %}
+                {% if user.is_superuser %} 
 
-
-        <table>
-            <tr>
-                <th></th>
-                <th>Tên cuốn sách</th>
-                <th>Thời gian</th>
-                <th>Trang thái</th>
-            </tr>
-            {% for list in  list_all %}
-                {% if list.dele_listing == False %}
-                    {% if  list.active %}
-                        <tr>
-                            <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
-                            <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
-                            <td>Thời gian trả dự kiến :{{list.convert_date}}</td>
-                            <td>
-                                <div>
-                                    <small style="color:green;">Đang mượn</small>
-                                    {% if user.is_superuser %}
-                                        <button data-listid="{{ list.id }}"   class="btn close-book " style="color:red" name="close_cation">Kết thúc</button> 
-                                        {% comment %} <form id="edit-post-form" class="card-text" style="margin-top: 1rem; margin-bottom: 1.6rem">
-                                            <div>
-                                                <textarea 
-                                                    id="edit-post-textarea">${contentDiv.innerHTML}</textarea>
-                                            </div>
-                                            <input type="submit" class="btn btn-primary post-submit" value="Save"/>
-                                        </form> {% endcomment %}
-        
-                                    {% endif %} 
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
-                            <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
-                            <td>Lên danh sách núc:{{list.timel}}</td>
-                            <td><small style="color:blue;">Đang đăng kí</small>
-                                <div>
-                                    {% if user.is_superuser %}
-                                        <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
-                                        <div id="list{{ list.id }}"></div> 
-                                        <button data-listid="{{ list.id }}"
-                                            class="btn  edit_change " >Chấp nhận
-                                        </button>  
-                                    {% endif %}     
-                                </div>
-        
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% else %}
-                    <tr>
-                        <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
-                        <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
-                        <td>{{list.return_date}}</td>
-                        <td><strong style="color:black;">Đã kết thúc</strong></td>
-                    </tr>
-                {% endif %}
-                    <style></style>
-        
-            {% endfor %}
-        </table>
-
-
-
-
-
-
-
-
-            {% if user.is_superuser %}
-                <h2 class="text-center">Những cuốn sách cần xử lí</h2>   
-                {% comment %} <div class="text-center justify-content-center">
-                    <div style="display: flex;" class"border"> {% endcomment %}
-
-
-                <div class="container">
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <div class="mx-4 border" style="text-align: center; padding-top: 1px;max-width: 330px">
-                            {% if list_add %}
-                                <h4>Danh sách h/s đăng kí</h4><br>
-                                {% for list_a in  list_add %}
-
-                                    {% comment %} <form action="{% url 'In_listing' list_a.id %}" method="post">
-                                        {% csrf_token %}
-                            
-                                        <button type="submit" class="btn btn-outline-primary btn-sm" style="color:red;">Xóa sách khỏi kệ</button>
-                                    </form> {% endcomment %}
-                                
-                                    <p class="border">
-                                        {% comment %} <img src="/library/media/{{list_a.item.image}}"  class="card-img-top" > {% endcomment %}
-
-
-                                        {% comment %} <a href="{% url 'In_listing' list_a.id %}">
-                                            <h6><a href="{% url 'book' list_a.item.id%}">Tên sách : {{ list_a.item.namebook}}</a></h6>
-                                            <small><a href="{% url 'human' list_a.user.id%}">Người đăng kí :{{ list_a.user }}</a></small> <br>
-                                            <small>Thời gian đăng kí :{{ list_a.timel|naturaltime}}</small>
-                                            <div id="list{{ list_a.id }}"></div>       dung de hien thi khi chap nhan cho muon                                     
-                                        </a> {% endcomment %}
-                                        <h6><a href="{% url 'book' list_a.item.id%}">Tên sách : {{ list_a.item.namebook}}</a></h6>
-                                        <small><a href="{% url 'human' list_a.user.id%}">Người đăng kí :{{ list_a.user }}</a></small> <br>
-                                        <small>Thời gian đăng kí :{{ list_a.timel|naturaltime}}</small>
-                                        <small>Cược :{{ list_a.item.bid }} V.N.D</small>
-                                        <div id="list{{ list_a.id }}"></div>                                            
-                                        <button data-listid="{{ list_a.id }}"  class="btn close-book " style="color:red;" name="close_lis" >Từ chối</button>
-
-                                        <button data-listid="{{ list_a.id }}"
-                                            class="btn  edit_change btn-sm btn-outline-primary justify-content-center">Chấp nhận cho mượn
-                                        </button>                                        
-                                    </p>
-
-
-                                {% endfor %}
-                            {% else %}
-                                <h4>Danh sách đăng kí trống !</h4><br>
-                            {% endif %}
-                        </div>
-                        <div class="mx-4 border" style="text-align: center; padding-top: 1px;max-width: 330px">
-                            {% if  list_in%}
-                                <h4>Danh sách h/s đang mượn</h4><br>
-                                {% for lista_i in  list_in %}
-
-                                    <p class="border">
-                                        <a href="{% url 'In_listing' lista_i.id %}">
-                                            {% comment %} <img src="/library/media/{{lista_i.item.image}}"  class="card-img-top" > {% endcomment %}
-                                            <h6><a href="{% url 'book' lista_i.item.id%}">Tên sách : {{ lista_i.item.namebook}}</a></h6>
-                                            <small><a href="{% url 'human' lista_i.user.id%}">Người đăng kí :{{ lista_i.user }}</a></small> <br>
-                                            {% comment %} <small>Tiền dự kiến phải trả : {{ lista_i.money_listing }} V.N.D</small> {% endcomment %}
-                                            {% comment %} <small>Thời gian trả dự kiến : {{ lista_i.date_om}} ngày</small> {% endcomment %}
-                                            <small>Tiền dự kiến ban đầu phải trả  : {{ lista_i.action_bid}}</small>
-                                            <small>Thời gian trả dự kiến : {{ lista_i.timel }}</small>
-                                        </a>
-                                        <button data-listid="{{ lista_i.id }}"  class="btn close-book " style="color:red;" name="close_lis" >Từ chối</button>
-                                    </p>
-                                
-                                {% endfor %}
-                            {% else %}
-                                <h4>Danh sách đang mượn trống</h4><br>
-                            {% endif %}                    
+                    <div style="display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;">
+                        <h2 >Tổng kho sách</h2>  
+                        <div >
+                            <button class="btn btn-sm btn-outline-secondary" id="book-list" style="border-bottom: thick solid red ;">Cần thao tác</button> 
+                            <button class="btn btn-sm btn-outline-secondary" id="book-like" style="border-bottom: thick solid #6c757d;">Đã ẩn/xóa</button>                            
                         </div>
                     </div>
-                </div>
+                    <div id= "book_list" style="display: block;">
+                        {% if list_all %}
+                        
+                            <table>
+                                <tr>
+                                    <th></th>
+                                    <th>Tên cuốn sách</th>
+                                    <th>Trang thái</th>
+                                    <th>Thời gian</th>
+                                </tr>
+                                {% for list in  list_all %}
+                                    {% if list.dele_listing == False %}
+                                        {% if  list.active %}
+                                            <tr>
+                                                <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
+                                                <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
+                                                
+                                                <td>                                                    
+        
+                                                    <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Kết thúc</button>
+
+                                                </td>
+                                                <td>Hạn trả{{list.convert_date}}</td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
+                                                <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
+                                                
+                                                <td>
+                                                    <div class=" flex_img">
+                                                        <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
+                                                        <div id="list{{ list.id }}"></div> 
+                                                        <button data-listid="{{ list.id }}"
+                                                            class="btn  edit_change " style="color:blue;" >Chấp nhận
+                                                        </button>  
+                                                    </div>
+        
+                                                </td>
+                                                <td>{{list.timel}}</td>
+                                            </tr>
+                                        {% endif %}
+
+                                    {% endif %}
+                            
+                            
+                                {% endfor %}
+                            </table>
+                        
+
+
+                        {% else %}
+                            <h3 style="color:red"><strong> không có sách cần thao tác.</strong></h3>
+                        {% endif %}
+                    </div>
+
+                    <div id ="book_like" style="display: none;">
+                        
+                        {% if all_book %}
+                            <table>
+                                <tr>
+                                    <th></th>
+                                    <th>Tên cuốn sách</th>
+                                    <th>Trang thái</th>
+                                    <th>Tùy chọn</th>
+                                </tr>
+                                {% for bok in all_book %}
+                                    {% if bok.numbe_book == 0 %}
+                                        <tr>
+                                            <td><a href="{% url 'book' bok.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{bok.image}}"></a></td>
+                                            <td><a href="{% url 'book' bok.id%}">{{bok.namebook}}</a></td>
+                                            
+                                            <td> <small style="color:black;">sách này đã cho mượn hết</small></td>
+                                            <td></td>
+                                        </tr>
+
+                                    {% elif bok.dele_book == False%}
+                                        <tr>
+                                            <td><a href="{% url 'book' bok.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{bok.image}}"></a></td>
+                                            <td><a href="{% url 'book' bok.id%}">{{bok.namebook}}</a></td>
+                                            <td> <small style="color:black;">sách này đã ngưng cho mượn</small></td>
+                                            <td></td>
+                                        </tr>
+                                    
+                                    {% endif %}
+                                {% endfor %}
+                            </table>
+                        {% else %}
+                            <h3 style="color:red"><strong> không có sách cần thao tác.?</strong></h3>
+                        {% endif %}
+                    </div>
+
+                {% else %}
+                <div style="display: flex;
+                flex-direction: row;
+                justify-content: space-between;">
+                        <h2 >Tổng kho sách</h2>  
+                        <div style="text-align:right;">
+                            <button class="btn  btn-outline-secondary" id="book-list" style="border-bottom: thick solid red ;">Kho sách</button> 
+                            <button class="btn btn-outline-secondary" id="book-like" style="border-bottom: thick solid #6c757d;">Đề xuất</button>                            
+                        </div>  
+                    </div>              
+
+                    <div id="book_list" style="display: block;">
+
+                        {% if list_all %}
+                            <strong>  Số dư : {{user.money}}</strong>
+                            <small>Số sách có thể mượn thêm: {{ user.limit_book}}</small>
+                            {% include "library/includes//table_book.html" with list_all=list_all %}
+
+
+
+            
+                        {% else %}
+                            <h3 style="color:red"><strong> không có sách đã tương tác !</strong></h3>
+                        {% endif %}                        
+                    </div>
+
+                    <div id ="book_like" style="display: none;">
+
+                        {% if up_top %}
+                            {% for book in up_top %}
+                            
+                                <div class="card">
+                                    <div class="m-2 ">
+        
+                                        <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
+                                            <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
+                                            <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                                            <small>{{ book.description}}</small>
+                                        </a>
+                                    </div>
+                                </div>                           
+                            {% endfor %}
+                        
+                            {% comment %} <div class="card m-2 " style="width: 20rem;"> {% endcomment %}
+                        {% else %}
+                            <h3 style="color:red"><strong> Không có sách đề xuất !</strong></h3>
+                        {% endif %}
+
+                    </div>
+                {% endif %}
 
             {% else %}
-
-
-                <h2 class="nav-item">Kho sách của : {{ user.username }}</h2><br>
-                <strong> có thể mượn thêm :{{user.limit_book}} cuốn sách/ Số dư khả dụng: {{ user.money}}  V.N.D</strong>
-                <div class="container">
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <div class="mx-4 border" style="text-align: center; padding-top: 1px;max-width: 330px">
-                            {% if list_add %}
-                                <h4>Danh sách đăng kí</h4><br>
-                                {% for list_a in  list_add %}
-                                    <p class="border">
-                                        
-                                        <h6><a href="{% url 'book' list_a.item.id%}">Tên sách : {{ list_a.item.namebook}}</a></h6>
-                                        {% comment %} <small><a href="">Người đăng kí :{{ list_a.user }}</a></small> <br> {% endcomment %}
-                                        <strong></strong>
-                                        <small>Thời gian đăng kí :{{ list_a.timel}}</small>
-                                    </p>
-                                {% endfor %}
-                            {% else %}
-                                <h4>Danh sách đăng kí trống</h4><br>
-                            {% endif %}
-                        </div>
-                        <div class="mx-4 border" style="text-align: center; padding-top: 1px;max-width: 330px">
-                            {% if  list_in%}
-                                <h4>Danh sách đang mượn</h4><br>
-                                {% for lista_i in  list_in %}
-                                    
-                                    <p class="border">
-                                        <h6><a href="{% url 'book' lista_i.item.id%}">Tên sách : {{ lista_i.item.namebook}}</a></h6>
-                                        {% comment %} <small>Người đăng kí :{{ lista_i.user }}</small><br> {% endcomment %}
-                                        <small>Thời gian trả dự kiến : {{ lista_i.timel}} / {{ lista_i.date_om}} ngày</small>
-                                        
-                                    </p>
-                                
-                                {% endfor %}
-                            {% else %}
-                                <h4>Danh sách đang mượn trống</h4><br>
-                            {% endif %}                    
-                        </div>
-                    </div>
-                </div>
+                <h3 style="color:red"><strong> Bạn chưa đăng nhập !!!</strong></h3>
+                <h4 ><a class="btn btn-primary" href="{% url 'login' %}">Nhấn vào đây để đăng nhập.</a></h4>
+            
+            
             {% endif %}
-        {% endif %}
+        </div>
     </div>
+    <script>
+        document.getElementById("book-list").onclick = function () {
+            document.getElementById("book_like").style.display = 'none';
+            document.getElementById("book_list").style.display = 'block';
+            document.getElementById("book-like").style.borderBottom ='thick solid #6c757d';
+            document.getElementById("book-list").style.borderBottom ='thick solid red ';
+
+        };   
+        document.getElementById("book-like").onclick = function () {
+            document.getElementById("book_like").style.display = 'block';
+            document.getElementById("book_list").style.display = 'none';
+            document.getElementById("book-list").style.borderBottom = "thick solid #6c757d";
+            document.getElementById("book-like").style.borderBottom = "thick solid red "; 
+
+        };         
+    </script>
+
+    {% comment %} <script language = "javascript" type = "text/javascript">
+        document.getElementById("book-list").onclick = function () {
+            document.getElementById("book_like").style.display = 'none';
+            document.getElementById("book_list").style.display = 'block';
+            document.getElementById("book-like").style.border-bottom='1 px solid transparent';
+            document.getElementById("book-list").style.border-bottom='2px solid red';
+
+        };   
+        document.getElementById("book-like").onclick = function () {
+            document.getElementById("book_like").style.display = 'none';
+            document.getElementById("book_list").style.display = 'block';
+            document.getElementById("book-list").style.border-bottom='1 px solid transparent';
+            document.getElementById("book-like").style.border-bottom='2px solid red';            
+        }; 
+     </script>   {% endcomment %}
+
 {% endblock %}

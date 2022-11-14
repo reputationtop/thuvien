@@ -1,14 +1,17 @@
 {% extends "library/layout.html" %}
 
 {% block title %}Hộp thư{% endblock %}
+
 {% if user.is_authenticated %}
     {% block body %}
         <div class="row">
-            <div class=" col-md-3 col-sm-4 row">
-                <button class="btn btn-sm btn-outline-primary" id="inbox">Thư đến</button>
-                <a  class="btn btn-sm btn-outline-primary" id="newemail" >Viết thư</a>
-                <button class="btn btn-sm btn-outline-primary" id="sent"> <Table>Thư đã gửi</Table></button>
-                <button class="btn btn-sm btn-outline-primary" id="archived">Thư đã lưu</button>    
+            <div class=" col-md-3 col-sm-4">
+                <div class="row">
+                    <button class="btn btn-sm btn-outline-primary" id="inbox">Thư đến</button>
+                    <button  class="btn btn-sm btn-outline-primary" id="newemail" >Viết thư</button>
+                    <button class="btn btn-sm btn-outline-primary" id="sent">Thư đã gửi</button>
+                    <button class="btn btn-sm btn-outline-primary" id="archived">Thư đã lưu</button>  
+                </div>
             </div>
             <div class="col-md-9 col-sm-8">
                 {% block bodys %}

@@ -13,74 +13,78 @@
         </div>   
     </div>
     <div class="row pb-4 justify-content-center">
-        {% if  user.is_authenticated%}
-                
-            {% if user.is_superuser%}
+        
+        {% if user.is_superuser%}
+            {% if  all_list_user %}
                 <div stlye="padding-bottom: 10px">
                     <div class="d-flex flex-wrap justify-content-center">
+                        <h3>Danh sách tài khoản</h3>
+                        <table>
+                            <tr>
+                                <th>Ảnh đại diện</th>
+                                <th>Tên tài khoản</th>
+                                <th>Số dư</th>
+                                <th>Kho sách</th>
+                                <th>lần truy cập gần nhất</th>
+                            </tr>
+                            {% for in_user in  all_list_user %}
+                                {% if in_user.is_superuser %}
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <a href="{% url 'human' in_user.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;" src="/library/media/{{in_user.avatar}}"></a></td>
+                                                <small>(Giáo viên)</small>
+                                            </div>
+                                        <td>
+                                            <a href="{% url 'human' in_user.id%}">{{in_user.username}}</a>
+                                        </td>
+                                        <td>0
 
-                        <div class="mx-4" style="max-width: 430px" >
-                            <h3>Danh sach tai khoan hoc sinh</h3>
-                            {% for stu  in studen %}
-                                <div class="tex-center border bg-light flex_img"  style="padding: 12px 16px 5px;">
-                                    
-                                    <a href="{% url 'human' stu.id%}">
-                                        <div>
-                                            <img width="30px" height="30px" src="/library/media/{{stu.avatar}}">
-                                        </div>  
+                                        </td>
+                                        <td>0</td>
+                                        <td><small datetime="{{in_user.date_joined}}"> Lần truy cập gần nhất {{ in_user.date_joined}}</small></td>
+                                    </tr>
+                                {% else %}
 
-                                        <strong> Tên học sinh:{{ stu.username}}</strong>
-                                    </a>
-                                    <div>
-                                
-                                        <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ stu.id }}"
-                                            class="btn edit-btn edit btn-sm btn-outline-primary">Nạp thêm tiền
-                                        </button>
-                                        <div>
-                                            <div class="card-text money" id="money{{ stu.id }}" style="font-size: 0.9rem; margin-bottom: .5rem">Số tiền đang có:{{ stu.money}}</div>
-                                            <small>Số sách có thể mượn thêm: {{ stu.limit_book}}</small>
-                                            <small datetime="{{stu.date_joined}}"> Lần truy cập gần nhất {{ stu.date_joined}}</small>
-                                        </div>
-                                    </div>
-                                </div>
 
+                                    <tr>
+                                        <td><a href="{% url 'human' in_user.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;" src="/library/media/{{in_user.avatar}}"></a></td>
+                                        <td>
+                                            <div></div>
+
+                                            <a href="{% url 'human' in_user.id%}">{{in_user.username}}</a>
+                                        </td>
+                                        
+                                        <td>
+                                            <div class=" row">
+                                                <div class="card-text money" id="money{{ in_user.id }}" style="font-size: 0.9rem; margin-bottom: .5rem">Số tiền đang có:{{ in_user.money}}</div>
+                                                <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ in_user.id }}"
+                                                    class="btn edit-btn edit btn-sm btn-outline-primary">Nạp thêm tiền
+                                                </button>
+                                            </div>
+
+                                        </td>
+                                        <td>{{ in_user.limit_book}}</td>
+                                        <td><small datetime="{{in_user.date_joined}}"> Lần truy cập gần nhất {{ in_user.date_joined}}</small></td>
+                                    </tr>
+
+
+                                {% endif %}
+                        
+                        
                             {% endfor %}
-                        </div>
-
-                        <div class="mx-4" style="max-width: 430px">
-                            <h3>Danh sách tài khoản giáo viên</h3>
-                            {% for tea in teacher %}
-                            <div  class="border bg-light flex_img" style="padding: 12px 16px 5px;">
-
-                                <div>
-                                    <img width="23px" height="auto" src="/library/media/{{tea.avatar}}">
-                                </div>  
-                                <div> 
-                                    <strong>tên giáo viên{{ tea.username}}</strong>
-                                    <div>
-                                        <small> Lần truy cập gần nhất {{ tea.date_joined}}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                            <a class="btn btn-sm btn-outline-primary" href=" {% url 'register' %}">Tạo thêm tài khản</a>
-
-                        </div>
-
+                        </table>
                     </div>
                 </div>
 
             {% else %}
-                <p class="nav-item justify-content-end"><a class="nav-link text-danger"  href=" {% url 'login' %}">ĐĂNG nhập tài khoản của giáo viên</a></p>
-
+                <h3 style="color:red"><strong> lỗi tải danh sách !!!</strong></h3>
             {% endif %}
-
         {% else %}
-            <li class="nav-item justify-content-end"><a class="nav-link" href=" {% url 'login' %}">Đăng nhập</a></li>
-        {% endif %}
+            <p class="nav-item justify-content-end"><a class="nav-link text-danger"  href=" {% url 'login' %}">ĐĂNG nhập tài khoản của giáo viên</a></p>
 
+        {% endif %}
         
     </div>
-    </form>
 
 {% endblock %}

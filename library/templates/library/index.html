@@ -1,20 +1,23 @@
 {% extends "library/layout.html" %}
 {% block title %}Kho Sách{% endblock  %}
 {% block body %}
-    <div>
-        <div class="">
+    <div> 
+        <div  style="padding-top: 1rem; margin: auto;">
 
             <h2 class="page-title">ĐỀ XUẤT <i class="fa fa-angle-right"></i></h2>
                 <div>
                     <div class="owl-carousel owl-theme">
                         {% for book in out_read %}
-                            <div class="card_title m-2 ">
+                            <div class="card_title m-2  " style="border: 1px solid rgba(0,0,0,.125);">
                                 <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
                                     <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
                                     <img src="/library/media/{{book.image}}"  class="card-img-top" >
                                     <small>{{ book.description}}</small>
                                 </a>
                             </div>  
+                        {% empty %}
+                            Kho đề xuất Trống !!!!
+
                         {% endfor %}   
                     </div>
 
@@ -135,8 +138,6 @@
           dots[slideIndex-1].className += " active";
           setTimeout(showSlides, 7000); // Change image every 2 seconds
         }
-
-
-      </script>
+    </script>
 
 {% endblock %}

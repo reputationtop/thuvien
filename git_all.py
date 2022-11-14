@@ -16,6 +16,24 @@ git push -u origin main
 
 
 
+<!DOCTYPE html>
+  chúng tôi có thể yêu cầu trình duyệt cung cấp tọa độ GPS của người dùng:
+<html lang="en">
+    <head>
+        <title>geolocation</title>
+    </head>
+    <body>
+        <script>
+          
+            navigator.geolocation.getCurrentPosition(function(position) {
+                document.write(position.coords.latitude + ", " + position.coords.longitude);
+            });
+  
+        </script>
+    </body>
+</html>
+
+
 git clone <repository url>. 
     Thao tác này sẽ tải kho lưu trữ xuống máy tính của bạn.
 
