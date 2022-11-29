@@ -34,15 +34,25 @@
             <div class="border-dark"> 
                 
                 <strong style= "max-width: 100px;overflow: hidden;">Tên : {{users.username}}</strong><br>
-                <strong>  Số dư : {{users.money}}</strong><br>
-
                 {% if users.is_superuser %}
                     <strong> Chức vụ : Giáo viên:</strong><br>
 
                 {% else %}
-
                     <strong> Chức vụ :Học sinh:</strong><br>
-                    <strong>  Số dư : {{users.money}}</strong><br>
+                    {% if user.is_superuser %}
+                        <div class="card-text money flex_img"  style="font-size: 0.9rem; margin-bottom: .5rem">Số dư: 
+                            <div class="flex_img">
+                                <strong id="money{{ users.id }}">{{ users.money}}</strong>
+                                <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ users.id }}"
+                                    class="btn edit-btn editmoneys btn-sm btn-outline-secondary"><strong>+</strong>
+                                </button>  
+                            </div>
+                    
+                        </div>
+                    {% else %}
+                    <strong>Số dư:{{ users.money}}</strong>
+                    {% endif %}
+
                 {% endif %}
 
             </div>
@@ -50,7 +60,7 @@
 
 
     </div>
-    <div>
+    <div style="padding-top: 1rem;">
         {% if  active_book%}
             <div>
                 <h2 id="posttitle">Kho sách:</h2>
@@ -93,11 +103,14 @@
                                 <td>
                                     <div class=" flex_img">
                                         {% if user.is_superuser %}
-                                            <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
-                                            <div id="list{{ list.id }}"></div> 
-                                            <button data-listid="{{ list.id }}"
-                                                class="btn  edit_change " style="color:blue;" >Chấp nhận
-                                            </button>  
+                                            
+                                            <div id="list{{ list.id }}">
+                                                <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
+                                                <button data-listid="{{ list.id }}"
+                                                    class="btn editlisting " style="color:blue;" >Chấp nhận
+                                                </button>                                              
+                                            </div> 
+
                                         {% else %}
                                             <small style="color:blue;">Đang đăng kí</small>
                                         {% endif %}

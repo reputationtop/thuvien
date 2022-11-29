@@ -32,7 +32,7 @@
                                     <tr>
                                         <td>
                                             <div class="row">
-                                                <a href="{% url 'human' in_user.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;" src="/library/media/{{in_user.avatar}}"></a></td>
+                                                <a href="{% url 'human' in_user.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;" src="{% if in_user.avatar %}/library/media/{{in_user.avatar}}{% else %}/library/media/logo/humanfix.png{% endif %}"></a></td>
                                                 <small>(Giáo viên)</small>
                                             </div>
                                         <td>
@@ -48,7 +48,7 @@
 
 
                                     <tr>
-                                        <td><a href="{% url 'human' in_user.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;" src="/library/media/{{in_user.avatar}}"></a></td>
+                                        <td><a href="{% url 'human' in_user.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;" src="{% if in_user.avatar %}/library/media/{{in_user.avatar}}{% else %}/library/media/logo/humanfix.png{% endif %}"></a></td>
                                         <td>
                                             <div></div>
 
@@ -56,12 +56,19 @@
                                         </td>
                                         
                                         <td>
-                                            <div class=" row">
-                                                <div class="card-text money" id="money{{ in_user.id }}" style="font-size: 0.9rem; margin-bottom: .5rem">Số tiền đang có:{{ in_user.money}}</div>
-                                                <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ in_user.id }}"
-                                                    class="btn edit-btn edit btn-sm btn-outline-primary">Nạp thêm tiền
-                                                </button>
+
+                                            <div class="card-text money flex_img"  style="font-size: 0.9rem; margin-bottom: .5rem">Số dư: 
+                                                <div class="flex_img">
+                                                    <strong id="money{{ in_user.id }}">{{ in_user.money}}</strong>
+                                                    <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ in_user.id }}"
+                                                        class="btn edit-btn editmoney btn-sm btn-outline-secondary"><strong>+</strong>
+                                                    </button>  
+                                                </div>
+                                          
                                             </div>
+
+
+
 
                                         </td>
                                         <td>{{ in_user.limit_book}}</td>

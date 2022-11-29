@@ -27,48 +27,48 @@ class Category(models.Model):
     class Meta:
         ordering = ['name']
 class Book(models.Model):
-    dele_book = models.BooleanField(default=False)
     namebook = models.CharField(max_length=300)
     image = models.ImageField(upload_to="images", null=True, blank=True)
     description = models.CharField(max_length=600)
     numbe_book = models.IntegerField()
+    numbein_book = models.IntegerField()
     bid = models.IntegerField()
     numbe_views = models.IntegerField(default=0, blank=True)
-    active = models.BooleanField(default=True)
+    dele_book = models.BooleanField(default=False)
     category = models.ManyToManyField(Category, blank=True, related_name="listcategory")
     # category = models.ManyToManyField(Category, on_delete=models.SET_DEFAULT, default='', blank=True, null=True)
     timeb = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, blank=True, related_name="listlike")
     def __str__(self):
-        return f"{self.namebook}, {self.image}, {self.description}, {self.numbe_book}, {self.bid}, {self.category}, {self.active}"
+        return f"{self.namebook}, {self.image}, {self.description}, {self.numbe_book}, {self.bid}, {self.category}, {self.dele_book}"
     def categorys(self):
         return str(self.category.all().count())
-    def num_category(self):
-
-        
+    def list_category(self):
         mylist = self.category.all()
         mystring = ",".join([str(char) for char in mylist])
-        print(mystring)
-
+        return str(mystring)
         # for y in self.category.all():
         #    x+=str(y)+""
-        # print(x)
-        return str(mystring)
-    
+        # print(x)   
     def is_in_listlike(self,user):
         """ kiem tra xem nguoi dung co like bai nay khong """
         return user.listlike.filter(pk=self.pk).exists()
     def num_like(self):
         return str(self.likes.count())
+    def num_book_listing(self):
+        # """ tra ve so luong sach da cho vao danh sach muon loai tru nhung danh sach đa ket thuc"""
+        return self.listingbook.filter(dele_listing= False).count()
+    
     def num_listing(self):
-        """ tra ve so luong sach da cho vao danh sach muon"""
-        return self.listing.all().count()
+        # """ tra ve so luong sach da cho vao danh đang len danh sach muon"""
+        return self.listingbook.filter(dele_listing= False).exclude(active=TRUE).count()
+    
     # def id_human(self):
     #     """ tra ve so luong sach da cho vao danh sach muon"""
     #     return self.listing.all().count()
     def fix_active(self):
         """ kiem tra xeem trong kho con sach khong """
-        if self.num_listing < self.numbe_book:
+        if self.num_book_listing < self.numbe_book:
             return True
         else:
             return False
@@ -81,8 +81,8 @@ class Book(models.Model):
 
 class Listing(models.Model):
     # Listing_action = models.ForeignKey(User, on_delete=models.PROTECT, related_name="Listing_action", blank=True, null=True)
-    item = models.ForeignKey(Book,on_delete=models.PROTECT,related_name="listing")
-    user = models.ForeignKey(User, on_delete=models.PROTECT,related_name="listing")
+    item = models.ForeignKey(Book,on_delete=models.PROTECT,related_name="listingbook")
+    user = models.ForeignKey(User, on_delete=models.PROTECT,related_name="listinguser")
     active = models.BooleanField(default=False)
     dele_listing = models.BooleanField(default=False)
     convert_date =models.DateTimeField(null=True,blank=True,auto_now_add=False)
@@ -158,6 +158,7 @@ class active_all(models.Model):
     performer = models.ForeignKey(User, on_delete=models.PROTECT, related_name="active_performer",null=False)
     subject_active = models.ForeignKey(User, on_delete=models.PROTECT, related_name="active_subject",default=None,  blank=True, null=True)
     item = models.ForeignKey(Book ,on_delete=models.PROTECT,related_name="active_comments", default=None,  blank=True, null=True)
+    book_flow = models.IntegerField(default=0, blank=True)
     category = models.ForeignKey(Category,on_delete= models.PROTECT, default=None, blank=True, null=True)
     # coment_active= models.ForeignKey(Comment,on_delete= models.PROTECT, default=None, blank=True, null=True)
     classify_active = models.IntegerField(default=0, blank=True, null=False)

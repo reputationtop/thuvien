@@ -6,7 +6,7 @@ from .models import Category , Book, Email,Listing ,active_all
 class NewbookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['namebook', 'image', 'description','numbe_book', 'bid', 'category']
+        fields = ['namebook', 'image', 'description','numbe_book','bid', 'category']
         widgets = {
             'namebook': forms.TextInput( attrs={'class': 'form-control'}),
             'image': forms.FileInput( attrs={'class': 'form-control'}),

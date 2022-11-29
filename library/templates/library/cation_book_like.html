@@ -51,7 +51,7 @@
                                                     <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
                                                     <div id="list{{ list.id }}"></div> 
                                                     <button data-listid="{{ list.id }}"
-                                                        class="btn  edit_change " style="color:blue;" >Chấp nhận
+                                                        class="btn  editlisting " style="color:blue;" >Chấp nhận
                                                     </button>  
                                                 {% else %}
                                                     <small style="color:blue;">Đang đăng kí</small>
@@ -74,23 +74,11 @@
                     
                         {% endfor %}
                     </table>
-
-
-
-
-                {% comment %} {% else %}
-                    <h2 id="posttitle">Kho sách của : {{ users.username }}</h2><br>
-                    <div class="money" id="money{{ users.id }}"><strong>  Số dư : {{users.money}}</strong></div>
-                    <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ users.id }}"
-                        class="btn edit-btn edit btn-sm btn-outline-primary">Nạp thêm tiền
-                    </button><br>
-                    <small>Số sách có thể mượn thêm: {{ users.limit_book}}</small>
-                    {% include "library/includes//table_book.html" with list_all=list_all %} {% endcomment %}
                 {% endif %}
             {% elif users.id == user.id %}
                 <strong>  Số dư : {{users.money}}</strong>
                 <small>Số sách có thể mượn thêm: {{ users.limit_book}}</small>
-                {% include "library/includes//table_book.html" with list_all=list_all %}
+                {% include "library/includes/table_book.html" with list_all=list_all %}
             {% else %}
                 <h1>Lỗi không xác định, quyền hạn của bạn không đủ</h1>
             {% endif %}        

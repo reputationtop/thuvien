@@ -13,7 +13,7 @@
                         <h2 >Tổng kho sách</h2>  
                         <div >
                             <button class="btn btn-sm btn-outline-secondary" id="book-list" style="border-bottom: thick solid red ;">Cần thao tác</button> 
-                            <button class="btn btn-sm btn-outline-secondary" id="book-like" style="border-bottom: thick solid #6c757d;">Đã ẩn/xóa</button>                            
+                            <button class="btn btn-sm btn-outline-secondary" id="book-like" style="border-bottom: thick solid #6c757d;">Kho sách</button>                            
                         </div>
                     </div>
                     <div id= "book_list" style="display: block;">
@@ -23,37 +23,51 @@
                                 <tr>
                                     <th></th>
                                     <th>Tên cuốn sách</th>
-                                    <th>Trang thái</th>
+                                    <th></th>
+                                    <th>Tên học sinh</th>
                                     <th>Thời gian</th>
                                 </tr>
                                 {% for list in  list_all %}
                                     {% if list.dele_listing == False %}
                                         {% if  list.active %}
                                             <tr>
-                                                <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
-                                                <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
                                                 
-                                                <td>                                                    
-        
-                                                    <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Kết thúc</button>
+                                                <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="{% if list.item.image %}/library/media/{{list.item.image}}{% else %}/library/media/logo/fixok.png{% endif %}"></a></td>
+                                                <td>
+                                                    <a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a>
+                                                </td>
+
+                                        
+                                                <td><a><img style="display: block;width: 80px ;height: 80px ;float: left;" src="{% if list.user.avatar %}/library/media/{{list.user.avatar}}{% else %}/library/media/logo/humanfix.png{% endif %}"></a></td>
+                                                <td>
+                                                    <div class="row">
+                                                        <a>{{list.user.username}}</a>
+                                                        <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Kết thúc</button>
+                                                    </div>
 
                                                 </td>
-                                                <td>Hạn trả{{list.convert_date}}</td>
+                                                <td><strong>Hạn trả :</strong> {{list.convert_date}}</td>
                                             </tr>
                                         {% else %}
                                             <tr>
-                                                <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{list.item.image}}"></a></td>
+                                                <td><a href="{% url 'book' list.item.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="{% if list.item.image %}/library/media/{{list.item.image}}{% else %}/library/media/logo/fixok.png{% endif %}"></a></td>
                                                 <td><a href="{% url 'book' list.item.id%}">{{list.item.namebook}}</a></td>
-                                                
+                                                <td><a><img style="display: block;width: 80px ;height: 80px ;float: left;" src="{% if list.user.avatar %}/library/media/{{list.user.avatar}}{% else %}/library/media/logo/humanfix.png{% endif %}"></a></td>
                                                 <td>
-                                                    <div class=" flex_img">
-                                                        <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
-                                                        <div id="list{{ list.id }}"></div> 
-                                                        <button data-listid="{{ list.id }}"
-                                                            class="btn  edit_change " style="color:blue;" >Chấp nhận
-                                                        </button>  
+                                                    <div class="row">
+                                                        <a>{{list.user.username}}</a>
+
+                                                        <div class=" flex_img">
+                                                            <div id="list{{ list.id }}">
+                                                                <button data-listid="{{ list.id }}"  class="btn close-book " style="color:red;" name="close_cation" >Từ chối</button>
+                                                                <button data-listid="{{ list.id }}"
+                                                                    class="btn editlisting " style="color:blue;" >Chấp nhận
+                                                                </button>                                              
+                                                            </div> 
+                                                        </div>
+
                                                     </div>
-        
+
                                                 </td>
                                                 <td>{{list.timel}}</td>
                                             </tr>
@@ -79,28 +93,43 @@
                                 <tr>
                                     <th></th>
                                     <th>Tên cuốn sách</th>
+                                    <th>Số lượng</th>
+                                    <th>Giá</th>
                                     <th>Trang thái</th>
-                                    <th>Tùy chọn</th>
                                 </tr>
                                 {% for bok in all_book %}
                                     {% if bok.numbe_book == 0 %}
                                         <tr>
-                                            <td><a href="{% url 'book' bok.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{bok.image}}"></a></td>
-                                            <td><a href="{% url 'book' bok.id%}">{{bok.namebook}}</a></td>
                                             
-                                            <td> <small style="color:black;">sách này đã cho mượn hết</small></td>
-                                            <td></td>
+                                            <td><a href="{% url 'book' bok.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="{% if bok.image%}/library/media/{{bok.image}}{% else %}/library/media/logo/fixok.png{% endif %}"></a></td>
+                                            <td><a href="{% url 'book' bok.id%}">{{bok.namebook}}</a></td>
+                                            <td>{{bok.numbe_book}}/{{bok.numbein_book}}</td>
+                                            <td>{{bok.bid}}</td>
+                                            <td> <small style="color:black;">Tạm hết</small>
+                                            </td>
                                         </tr>
 
-                                    {% elif bok.dele_book == False%}
+                                    {% elif bok.dele_book == True %}
                                         <tr>
-                                            <td><a href="{% url 'book' bok.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="/library/media/{{bok.image}}"></a></td>
+                                            <td><a href="{% url 'book' bok.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="{% if bok.image%}/library/media/{{bok.image}}{% else %}/library/media/logo/fixok.png{% endif %}"></a></td>
                                             <td><a href="{% url 'book' bok.id%}">{{bok.namebook}}</a></td>
-                                            <td> <small style="color:black;">sách này đã ngưng cho mượn</small></td>
-                                            <td></td>
+                                            <td>{{bok.numbe_book}}/{{bok.numbein_book}}</td>
+                                            <td>{{bok.bid}}</td>
+                                            <td> <small style="color:#DC143C;">Tạm hoãn cho mượn</small></td>
                                         </tr>
-                                    
+                                    {% else %}
+                                        <tr>
+                                            <td><a href="{% url 'book' bok.id%}"><img style="display: block;width: 80px ;height: 80px ;float: left;"  src="{% if bok.image%}/library/media/{{bok.image}}{% else %}/library/media/logo/fixok.png{% endif %}"></a></td>
+                                            <td><a href="{% url 'book' bok.id%}">{{bok.namebook}}</a></td>
+                                            <td>{{bok.numbe_book}}/{{bok.numbein_book}}</td>
+                                            <td>{{bok.bid}}</td>
+                                            <td> <small style="color:#00FF00;">Đang hoạt động</small></td>
+                                        </tr>
                                     {% endif %}
+
+
+
+
                                 {% endfor %}
                             </table>
                         {% else %}
@@ -124,7 +153,7 @@
                         {% if list_all %}
                             <strong>  Số dư : {{user.money}}</strong>
                             <small>Số sách có thể mượn thêm: {{ user.limit_book}}</small>
-                            {% include "library/includes//table_book.html" with list_all=list_all %}
+                            {% include "library/includes/table_book.html" with list_all=list_all %}
 
 
 
@@ -136,15 +165,16 @@
 
                     <div id ="book_like" style="display: none;">
 
-                        {% if up_top %}
-                            {% for book in up_top %}
+                        {% if all_book %}
+                            {% for book in all_book %}
                             
                                 <div class="card">
                                     <div class="m-2 ">
         
                                         <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
                                             <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
-                                            <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                                            
+                                            <img src="{% if bok.image%}/library/media/{{bok.image}}{% else %}/library/media/logo/fixok.png{% endif %}"  class="card-img-topup" >
                                             <small>{{ book.description}}</small>
                                         </a>
                                     </div>

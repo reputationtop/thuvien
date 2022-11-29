@@ -1,0 +1,67 @@
+{% extends "library/layout.html" %}
+{% block title %}Sửa thông tin sách{% endblock  %}
+{% block body %}
+
+    {% if  user.is_authenticated%}
+        {% if user.is_superuser%}
+            <form action="{% url 'register' %}" method="post" class="form-signin" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset>
+                    <legend><h2 class="text-center">Chỉnh sửa sách</h2>:</legend>
+                    <div >Tên sách :
+                        <input class="form-control" autofocus type="text" name="namebook" value="{{thisbook.namebook}}">
+                    </div>
+                    <div >Ảnh mô tả:
+                        <input class="form-control" type="file" name="image" action="/library/media/"  value="{{thisbook.image}}" >
+                    </div>
+
+                    <div >Mô tả:
+                        <input class="form-control" autofocus type="text" name="description" value="{{thisbook.description}}">
+                    </div>
+
+                    <div>Giá tiền
+                        <input null="false"  type="number" class="form-control"  name="bid" value="{{thisbook.bid}}" step="1000" min="5000" max="500000">
+                    </div>
+
+                    <div >Số lượng sách:
+                        <input class="form-control" null="false"  type="number" min="1" max="50" step="1" type="text" name="numbein_book" value="{{thisbook.numbein_book}}">
+                    </div>
+                    <div >Thể loại:
+                        
+                        <select type="checkbox" name="category" id="test"  >
+                            {% for category_in  in categoryall %}
+                                <input type="checkbox" id="category_in.id" name="category_in.id" value="category_in.id">
+                                <label for="category_in.id"> {{category_in.name}}</label><br>                                
+
+
+                            {% endfor %}
+                        </select>
+                        {% comment %} <input class="form-control"  type="text" name="category" value="{{thisbook.list_category}}"> {% endcomment %}
+                    </div>
+
+                    
+                    <div class="flex_img">Xóa sách:
+                        <input type="checkbox" name="dele_book" id="dele_book" {% if thisbook.dele_book == True %}checked{% endif %}>
+                    </div>
+
+
+                    <div style="text-align: center; padding-top: 1px" >
+                        <nav style=" padding-top: 2px;">
+                            <input class="btn btn-primary "  style=" padding-top: 2px" name="upalll" type="submit" value="Lưu và chỉnh sửa">
+                        </nav>
+                        <nav style=" padding-top: 2px;">
+                            <input class="btn btn-primary "  style=" padding-top: 2px" name="upandfix" type="submit" value="lưu">
+                            
+                        </nav>
+                        
+                    </div>
+
+                </fieldset>
+            </form>
+        {% else %}
+            <h1 class="text-center">Bạn cần phải đăng nhập tài khoản giáo viên để có thể sử dụng chức năng này</h1>
+            <h2 class="text-center"><a class="btn btn-primary" href="{% url 'login' %}">Nhấn vào đây để đăng nhập.</a></h2>
+        {% endif %} 
+    {% endif %} 
+{% endblock %}
+

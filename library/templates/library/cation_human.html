@@ -33,8 +33,21 @@
                     {% if user.is_superuser %}
                         <div class="money" id="money{{ users.id }}"><strong>  Số dư : {{users.money}}</strong></div>
                         <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ users.id }}"
-                            class="btn edit-btn edit btn-sm btn-outline-primary">Nạp thêm tiền
+                            class="btn edit-btn editmoney btn-sm btn-outline-primary">Nạp thêm tiền
                         </button><br>
+
+
+                        <div class="card-text money flex_img" >Số dư: 
+                            <div class="flex_img">
+                                <strong id="money{{ users.id }}">{{ users.money}}</strong>
+                                <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ users.id }}"
+                                    class="btn edit-btn editmoney btn-sm btn-outline-secondary"><strong>+</strong>
+                                </button>  
+                            </div>
+                      
+                        </div>
+
+
                         <small>Số sách có thể mượn thêm: {{ users.limit_book}}</small>
                     {% endif %}
                 {% endif %}

@@ -1,6 +1,6 @@
 body {
     padding-top: 6rem;
-    /* max-width: 1040px; */
+    max-width: 100%;
     min-width: 360px;
     /* background: url("library\media\logo\5cd06f4f-3909-4187-a089-f570d6e43b45.png"); */
     background: linear-gradient(120deg,#10100d00,rgba(255, 255, 255, 0.737));
@@ -194,7 +194,14 @@ a:hover {
     font-weight: 800; 
     color: #fff;
 }
+
 .card-img-top {
+    max-width: 350px;
+    width: 100%;
+
+    object-fit: cover;
+}
+.card-img-topup {
     width: 100%;
     height: 15rem !important;
     object-fit: cover;

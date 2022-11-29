@@ -45,6 +45,8 @@
                                 
                             </div>
                         </a>
+                    {% empty %}
+                        <strong style="color:red;"> trống</strong>
                     {% endfor %}
                     {% for mail  in a_in_mail %}
                         <a href="{% url 'read_mail' mail.id%}" class="text-decoration-none text-dark">
@@ -60,6 +62,8 @@
                                 
                             </div>
                         </a>
+                    {% empty %}
+                        <strong style="color:red;"> trống</strong>
                     {% endfor %}
                 </div>   
             </div>
@@ -80,7 +84,11 @@
                                 
                             </div>
                         </a>
-                    {% endfor %}
+                    {% empty %}
+                        <strong style="color:red;"> trống</strong>
+                    {% endfor %}                    
+
+
                 </div>            
             </div>
             <div id="new_mall" style="display: none;">

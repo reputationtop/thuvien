@@ -29,6 +29,7 @@ urlpatterns = [
     
     path("newbook", views.newbook, name="newbook"),
     path("book/<int:book_id>", views.is_book, name="book"),
+    path("fixbook/<int:book_id>", views.fixbook, name="fixbook"),
     path("del_book/<int:book_id>", views.del_book, name="del_book"),
     
     path("mailbook", views.mailbook, name="mailbook"),
@@ -41,7 +42,7 @@ urlpatterns = [
     path("categories", views.categories, name="categories"),
     path("category/<int:category_id>", views.category, name="category"),
     
-    path("changelike/<int:book_id>", views.changelike, name="changelike"),#like/unlike
+    path("changebook", views.changebook, name="changebook"),#like/unlike
     
     
     
@@ -55,10 +56,10 @@ urlpatterns = [
     path("views_active_over/<int:user_id>", views.views_active_over, name="views_active_over"),
     
     
-    path("add_bid/<int:user_id>", views.add_bid, name="add_bid"),
+    path("add_bid", views.add_bid, name="add_bid"),
     
     path("NewListing/<int:book_id>", views.NewListing, name="NewListing"),
-    path("change_listing/<int:listing_id>",views.change_listing, name="change_listing"),
+    path("change_listing",views.change_listing, name="change_listing"),
     # path("close_listing/<int:listing_id>", views.close_listing, name="close_listing"),
     path("close_listing", views.close_listing, name="close_listing"),
     

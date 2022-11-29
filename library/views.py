@@ -39,7 +39,7 @@ def index(request):
         out_read = offer_book( None)
     # print("is book")
     # print(out_read) 
-    paginator = Paginator(all_book, 12)
+    paginator = Paginator(all_book, 60)
     page_number = request.GET.get('page')
     books = paginator.get_page(page_number)
     return render(request, "library/index.html", {
@@ -106,8 +106,8 @@ def offer_book(user_id):
 
     # chọn tất cả những quyển sách còn để đề xuất
     all_book = Book.objects.exclude(numbe_book = 0)
-    print("alllll")
-    print(len(all_book))
+    # print("alllll")
+    # print(len(all_book))
     if bz is not None:
          for ex in bz:
             #  loại bỏ những quyển sách đang mượn
@@ -183,24 +183,22 @@ def category(request, category_id):
         "category": Category.objects.get(pk=category_id),
         "books": all_book
     })
-    
-    
-    
-
-
 @csrf_exempt
 @login_required
 def newbook(request):
     if request.user.is_superuser:
         if request.method == "POST":
             form = NewbookForm(request.POST ,request.FILES)
+            
+            form.instance.numbein_book = int(request.POST["numbe_book"])
             form.save
             if form.is_valid():
-                new_book = form
+                new_book = form.save()
                 reasons = "thêm sách mới vào kho"
-                active_a = active_all.objects.create(performer=request.user,subject_active=request.user,item = new_book, reason = reasons)
+                active_a = active_all.objects.create(performer=request.user,item = new_book, reason = reasons)
                 active_a.save()
                 return HttpResponseRedirect(reverse("book", args=(new_book.pk,)))
+
             
         else:
             form = NewbookForm()
@@ -213,70 +211,55 @@ def newbook(request):
 @csrf_exempt
 @login_required(login_url='login')
 def del_book(request, book_id):
-    book_del = Book.objects.filter(pk=book_id)
+    book_del = Book.objects.get(pk=book_id)
     if request.method == 'POST':
         if request.user.is_superuser:
             if"close_book" in request.POST:
                 book_del.dele_book = True
+                book_del.save()
                 reasons = "xóa sách"
                 active_a = active_all.objects.create(performer=request.user,subject_active=request.user,item = book_del,reason = reasons)
                 active_a.save()
-                book_del.save
                 messages.success(request, 'Đã ẩn sách khoi thu vien')
                 return HttpResponseRedirect(reverse("index"))  
-
             if"opent_book" in request.POST:
-                book_del.dele_book = True
+                book_del.dele_book = False
                 reasons = "khôi phục sách"
-                active_a = active_all.objects.create(performer=request.user,subject_active=request.user,item = book_del,reason = reasons)
+                active_a = active_all.objects.create(performer=request.user,subject_active =request.user,item = book_del,reason = reasons)
                 active_a.save()
-                book_del.save
-                messages.success(request, 'Đã ẩn sách khoi thu vien')
+                book_del.save()
+                messages.success(request, 'Đã khôi phục sách')
                 return HttpResponseRedirect(reverse("index"))
             
             
             if"more_book" in request.POST:
                 number_book = int(request.POST["num_book"])
-                book_del.dele_book = True
-                reasons = "xóa sách"
-                
+                book_del.numbe_book = book_del.numbe_book + number_book
+                # book_del.full_book = book_del.full_book + number_book
+                reasons = "thêm sách"
+                active_a = active_all.objects.create(performer=request.user , subject_active = request.user,item = book_del,reason =reasons)
+                active_a.save()
+                book_del.save()
+                messages.success(request, 'Đã thêm sách vào thu vien')
+                return HttpResponseRedirect(reverse("index"))
             if"lose_book" in request.POST:
-                book_del.numbe_book = int(request.POST["num_book"])
-                book_del.dele_book = True
-                reasons = "xóa sách"
+                number_book = int(request.POST["num_book"])
+                book_del.numbe_book = book_del.numbe_book + number_book
+                # book_del.full_book = book_del.full_book + number_book                
+                reasons = "loại bỏ sách không thể sử dụng"
                 active_a = active_all.objects.create(performer=request.user,subject_active=request.user,item = book_del,reason = reasons)
                 active_a.save()
-                book_del.save
-                messages.success(request, 'Đã ẩn sách khoi thu vien')
+                book_del.save()
+                messages.success(request, 'Đã loại bơt')
                 return HttpResponseRedirect(reverse("index"))
-
+            
+            else:
+                return messages.error(request, 'không xác định được hành động')
+            
+            
         else:
             messages.error(request, 'bạn phải đăng nhập tài khoản giáo viên để thực hiện thao tác này')
             return HttpResponseRedirect(reverse("index"))
-            if"change" in request.POST:
-                number_book = int(request.POST["num_date"])
-                x = datetime.datetime.now()
-                listing.convert_date = x + datetime.timedelta(days=date)
-
-                if book.bid <= 30000: 
-                    listing.bid_date = 300
-                else:
-                    
-                    listing.bid_date = (listing.item.bid /100)
-                if date >=7 and date <= 90:
-                    listing.action_bid = round(((date//7)*4 + (date%7)/(2/3))*listing.bid_date, -2)
-                elif date<7 and date :
-                    listing.action_bid = round(((date//7)*4 + (date%7)/(2/3))*listing.bid_date, -2)
-                else:
-                    messages.error(request, 'Lỗi hãy thử lại')
-                                           
-                    return Is_listing(request)
-                
-                reasons = "Đã them sách vao danh sach muon"
-                active_a = active_all.objects.create(performer=request.user, subject_active = request.user,item = book,money_flow = 0,money_now= listing.user.money, classify_active = 2,reason = reasons)
-                active_a.save()
-                book.save()
-
 
 
 @login_required(login_url='login')
@@ -286,14 +269,13 @@ def Is_listing(request):
             all_book = Book.objects.all().order_by("-timeb")
             list_all = Listing.objects.all()
             like = None
-
         else:
-
             list_all = Listing.objects.filter(user=request.user)
             like = request.user.listlike.all()
             all_book =  offer_book(request.user.id)
             for ex in list_all:
                 like = like.exclude(id=ex.item.id)
+        print(len( all_book))
         return render(request, "library/list_add.html", {
             "list_all": list_all,
             "all_book": all_book,
@@ -364,48 +346,40 @@ def NewListing(request, book_id):
 # active_all = active_all.objects.create(performer=book,subject =,item =,category =,money_flow =,reason =)
 @csrf_exempt
 @login_required(login_url='login')
-def change_listing(request, listing_id):
-    if request.method == "POST":
+def change_listing(request):
+        if request.method !="PUT":
+            return JsonResponse({"error": " PUT request required"}, status=400)
         if request.user.is_superuser:
+            data = json.loads(request.body)
+            listing_id = data.get("listing_id","")
             listing = Listing.objects.get(pk=listing_id)
-            book = listing.item
-            if"change" in request.POST:
-                date = int(request.POST["num_date"])
-                x = datetime.datetime.now()
-                listing.convert_date = x + datetime.timedelta(days=date)
-
-                if book.bid <= 30000: 
-                    listing.bid_date = 300
-                else:
-                    
-                    listing.bid_date = (listing.item.bid /100)
-                if date >=7 and date <= 90:
-                    listing.action_bid = round(((date//7)*4 + (date%7)/(2/3))*listing.bid_date, -2)
-                elif date<7 and date :
-                    listing.action_bid = round(((date//7)*4 + (date%7)/(2/3))*listing.bid_date, -2)
-                else:
-                    messages.error(request, 'Lỗi hãy thử lại')
-                                           
-                    return Is_listing(request)
-                
-                reasons = "Đã them sách vao danh sach muon"
-                
-                active_a = active_all.objects.create(performer=request.user, subject_active = request.user,item = book,money_flow = 0,money_now= listing.user.money, classify_active = 2,reason = reasons)
-                active_a.save()
-            
-                
-                
-                book.save()
-                listing.active = True
-                listing.save()
-                messages.success(request, 'Đã  thành công')  
-                return Is_listing(request)
+            book = Book.objects.get(id = listing.item.id)
+            date = int(data.get("date_if",""))
+            x = datetime.datetime.now()
+            listing.convert_date = x + datetime.timedelta(days=date)
+            if book.bid <= 30000: 
+                listing.bid_date = 300
             else:
-                messages.error(request, 'Lỗi hãy thử lại')
-                return Is_listing(request)
+                listing.bid_date = (listing.item.bid /100)
+            if date >=7 and date <= 90:
+                listing.action_bid = round(((date//7)*4 + (date%7)/(2/3))*listing.bid_date, -2)
+            elif date<7 and date :
+                listing.action_bid = round(((date//7)*4 + (date%7)/(2/3))*listing.bid_date, -2)
+            else:        
+                return JsonResponse({"error": " có lỗi xảy ra"}, status=400)
+            reasons = "Đã them sách vao danh sach muon"
+            active_a = active_all.objects.create(performer=request.user, subject_active = listing.user,item = book,money_flow = 0,money_now= listing.user.money, classify_active = 2,reason = reasons)
+            active_a.save()
+        
+            
+            book.save()
+            listing.active = True
+            listing.save()
+
+            return JsonResponse({"success": " có lỗi xảy ra,không thấy danh sách"}, status=400)
         else:
-            messages.error(request, 'bạn phải đăng nhập tài khoản giáo viên để thực hiện thao tác này')
-            return Is_listing(request)
+            return JsonResponse({"error": " không nhận diện được tài khoản giáo viên"}, status=400)
+
                     # reasons = "Đã them sách vao danh sach muon"
                     # active_a = active_all.objects.create(performer=request.user,item = book,money_flow = -book.bid,reason = reasons)
                     # active_a.save()
@@ -414,128 +388,103 @@ def change_listing(request, listing_id):
 def close_listing(request):
     if request.method !="PUT":
         return JsonResponse({"error": " PUT request required"}, status=400)
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse("login"))
     if request.user.is_superuser:
-        try:
-            data = json.loads(request.body)
-            listing_id = data.get("list_id","")
-            listing = Listing.objects.get(pk=listing_id)
-            user_listing = listing.user
-            book_listing = listing.item
-            book = Book.objects.get(id = book_listing.id)
-            users = User.objects.get(username = user_listing.username)
-            if Listing.objects.get(pk=listing_id) is None:
-                messages.error(request, 'Không tìm thấy danh sách') 
-                if"close_cation" in request.PUT:
-                    return HttpResponseRedirect(reverse("views_active_book", args=(user_listing.id,)))
-                elif"close_lis":
-                    return Is_listing(request)
-                else:
-                    return HttpResponseRedirect(reverse("index"))
-                # return JsonResponse({"error": "Không tìm thấy danh sách"})
-                # return HttpResponseRedirect(reverse("index"))
-            else:
-                a = Listing.objects.get(pk=listing_id)
-                if a.dele_listing == True:
-                    messages.error(request, 'Danh sách này đã kết thúc chu trình cho mượn') 
-                    if"close_cation" in request.PUT:
-                        return HttpResponseRedirect(reverse("views_active_book", args=(user_listing.id,)))
-                    elif"close_lis":
-                        return Is_listing(request)
-                    else:
-                        return HttpResponseRedirect(reverse("index"))
-                    
-                    
-            if listing.active == False:
-                
-                listing.return_date = datetime.datetime.now()
-                book.numbe_book = book.numbe_book + 1
-                users.money = users.money + book.bid
-                users.limit_book = users.limit_book +1
-                reasons = "Kết thúc hành động mượn"
-                active_a = active_all.objects.create(performer=request.user,subject_active =users,item =book,money_flow = book.bid,reason =reasons)
-
-                listing.dele_listing = True
-                # return Is_listing(request)
-            else:
-                listing.return_date = datetime.datetime.now()
-                x = book.bid - listing.money_listing()
-                if x>0:
-                    users.money = users.money + x
-                else:
-                    users.money = users.money
-                book.numbe_book = book.numbe_book + 1
-                users.limit_book = users.limit_book +1
-                reasons = "Kết thúc hành động mượn"
-                active_a = active_all.objects.create(performer=request.user,subject_active =users,item =book,money_flow = book.bid,money_now=users.money,reason =reasons)
-                listing.dele_listing = True
-            active_a.save()  
-            users.save()
-            book.save()
-            listing.save()
-            if"close_cation" in request.PUT:
-                return HttpResponseRedirect(reverse("views_active_book", args=(user_listing.id,)))
-            elif"close_lis":
-                return Is_listing(request)
-            else:
-                return HttpResponseRedirect(reverse("index"))
-        except:
-            # return JsonResponse({"error": "Hãy kiểm tra lại"})
-            messages.error(request, 'Hãy kiểm tra lại ')
-            if"close_cation" in request.PUT:
-                return HttpResponseRedirect(reverse("views_active_book", args=(user_listing.id,)))
-            elif"close_lis":
-                return Is_listing(request)
-            else:
-                return HttpResponseRedirect(reverse("index"))
-
-    else:
+        data = json.loads(request.body)
+        listing_id = data.get("list_id","")
+        listing = Listing.objects.get(pk=listing_id)
+        book = Book.objects.get(id = listing.item.id)
+        users = User.objects.get(id = listing.user.id)
+        if listing is None:
+            return JsonResponse({"error": " có lỗi xảy ra,không thấy danh sách"}, status=400)
         if listing.active == False:
+            
+            listing.return_date = datetime.datetime.now()
+            book.numbe_book = book.numbe_book + 1
+            users.money = users.money + book.bid
+            users.limit_book = users.limit_book +1
+            reasons = "Kết thúc hành động mượn"
+            active_a = active_all.objects.create(performer=request.user,subject_active =users,item =book,money_flow = book.bid,reason =reasons)
+        else:
+            listing.return_date = datetime.datetime.now()
+            x = book.bid - listing.money_listing()
+            if x>0:
+                users.money = users.money + x
+            else:
+                users.money = users.money
             book.numbe_book = book.numbe_book + 1
             users.limit_book = users.limit_book +1
-            users.money = users.money + book.bid -1000
-            listing.dele_listing = True
             reasons = "Kết thúc hành động mượn"
             active_a = active_all.objects.create(performer=request.user,subject_active =users,item =book,money_flow = book.bid,money_now=users.money,reason =reasons)
-            active_a.save()   
-            users.save()
-            book.save()
-            listing.save()
-            return JsonResponse({"message": "Đã xóa khỏi danh sách làm việc thành công"})
-            # messages.success(request, 'Đã xóa khỏi anh sách thành công') 
-            # return Is_listing(request)
-        else:
-            return JsonResponse({"error": "Bạn cần đến thư viện thì mới có thể trả sách"})
-            # messages.error(request, 'Bạn cần đến thư viện thì mới có thể trả sách') 
-            # return Is_listing(request)
-                    
-
+        listing.dele_listing = True
+        active_a.save()  
+        users.save()
+        book.save()
+        listing.save()
+        return JsonResponse({"success": "đã xử lí xong danh sách mượn"})
+    else:
+        return JsonResponse({"error": " không nhận diện được tài khoản giáo viên"}, status=400)
     
-
+@csrf_exempt
 @login_required(login_url='login')
-def changelike(request, book_id):
-    if request.method == "POST":
-        user = request.user
-        book = Book.objects.get(pk=book_id)
+def changebook(request):
+    if request.method !="PUT":
+        return JsonResponse({"error": " PUT request required"}, status=400)
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("login"))
+    data = json.loads(request.body)
+    bookid = data.get("bookid","")
+    likebook = data.get("likebook", "")
+    # fixallbook = data.get("fixallbook", "")
+    user = request.user
+    book = Book.objects.get(pk=bookid)
+    if likebook :
         if book.is_in_listlike(user):
             book.likes.remove(user)
         else:
             book.likes.add(user)
-        
-        return HttpResponseRedirect(reverse("book", args=(book_id,)))
+    book.save()
+    return JsonResponse({"success": "đã điểu chỉnh lượt thích"}) 
+@csrf_exempt
+@login_required
+def fixbook(request, book_id):
+    if request.user.is_superuser:
+        thisbook = Book.objects.get(id= book_id)
+        # for x in thisbook.category:
+        #     print(x.name)
+        # print(thisbook.category)
+        categoryall = Category.objects.all()
+        if request.method == "PUT":
+            # namebook = request.PUT["new_category"]
+            # image = request.PUT["new_category"]
+            # description = request.PUT["new_category"]
 
-        #     book = Book.objects.get(pk=book_id)
-        # if book.is_in_listlike(request.user):
-        #     book.likes.remove(request.user)
-        # else:
-        #     book.likes.add(request.user)
-        
-        # return HttpResponseRedirect(reverse("book", args=(book_id,)))
+            # numbein_book = request.PUT["new_category"]
+            # bid = request.PUT["new_category"]
+            # numbe_views = request.PUT["new_category"]
+            # dele_book = request.PUT["new_category"]
+            # category = request.PUT["new_category"]
+            form = NewbookForm(request.POST ,request.FILES)
+            
+            form.instance.numbein_book = int(request.POST["numbe_book"])
+            form.save
+            if form.is_valid():
+                new_book = form.save()
+                reasons = "thêm sách mới vào kho"
+                active_a = active_all.objects.create(performer=request.user,item = new_book, reason = reasons)
+                active_a.save()
+                return HttpResponseRedirect(reverse("book", args=(new_book.pk,)))
+        else:
+            form = NewbookForm()
+        return render(request, "library/newfixbook.html", {
+            "thisbook": thisbook,
+            "categoryall": categoryall
+        })
+    else:
+        messages.error(request, 'bạn phải đăng nhập tài khoản giáo viên để thực hiện thao tác này')
+        return HttpResponseRedirect(reverse("index"))
 
 def is_book(request, book_id):
     book = Book.objects.get(pk=book_id)
-    
     comments = book.active_comments.filter(classify_active =1).order_by("-time_2")
     total_coments = comments.count()
     if request.user.is_authenticated:
@@ -921,36 +870,34 @@ def human(request, user_id):
     })
 @csrf_exempt
 @login_required(login_url='login')
-def add_bid(request, user_id):
-    
-        if request.user.is_superuser:
-            if request.method == "POST":
-        
-                # Look up listing from request
-                users = User.objects.get(pk=user_id)
-                add_money = request.POST["add_money"]
-                money_in = int(add_money) + users.money
-                print(money_in)
-                # user.money = money_in
-                reasons = "nạp tiền "
-                active_a = active_all.objects.create(performer=request.user, subject_active = users,money_flow = int(add_money),money_now= money_in, classify_active = 2,reason = reasons)
-                active_a.save()
-                users.money=money_in
-                users.save()
-                messages.success(request, 'nap tien thanh cong')
-                return HttpResponseRedirect(reverse("all_user"))
+def add_bid(request):
 
-            else: 
-                messages.error(request, 'phuong thuc phai la post.')
-                return HttpResponseRedirect(reverse("all_user"))
-        else: 
-            messages.error(request, 'ban phai la giao vien moi co the nap tien.')
-            return HttpResponseRedirect(reverse("index"))  
-        
+    if request.method != "PUT":
+        messages.error(request, 'Method phải là PUT') 
+        return JsonResponse({"error": "PUT request required."}, status=400)
+    if request.user.is_superuser:
+        data = json.loads(request.body)
+        money_if = data.get("money_if", "")
+        id_user = data.get("user_id", "")
+        users = User.objects.get(pk=id_user)
+        money_if = data.get("money_if", "")
+        addmoney = data.get("addmoney", "")
 
+        if addmoney :
+            money_in =  users.money + int(money_if)
+            reasons = "nạp tiền " ,money_if,"  V.n.d"
+        else:
+            money_in =  users.money - int(money_if) 
+            reasons = "rút tiền " ,money_if,"  V.n.d"
+        active_a = active_all.objects.create(performer=request.user, subject_active = users,money_flow = int(money_if),money_now= money_in, classify_active = 2,reason = reasons)
+        active_a.save()
+        users.money = money_in
+        users.save()
 
-        
-        
+        return JsonResponse({"message": "hoat dong binh thuong"}, status=201)
+    else: 
+        messages.error(request, 'ban phai la giao vien moi co the nap tien.')
+        return HttpResponseRedirect(reverse("index"))  
 def login_view(request):
     if request.method == "POST":
         username = request.POST["username"]

@@ -1,12 +1,16 @@
+
 {% extends "library/layout.html" %}
 {% block title %}{{ book.namebook}}{% endblock  %}
 {% block body %}
     <div>
 
         <div class=" isb_padding isb-container">
-            <div class="row"> 
+            <div class="flex_img"> 
                 <div class="col-md-6 d-flex">
-                    <img style="max-width: 350px;"  src="/library/media/{{book.image}}"  class="card-img-top" >
+                    {% comment %} <img style="max-width: 350px;"  src="/library/media/{{book.image}}"  class="card-img-top" > {% endcomment %}
+
+                    <img style="margin-left: auto; margin-right: auto;" class="card-img-top"  src="{% if book.image %}/library/media/{{book.image}}{% else %}/library/media/logo/fixok.png{% endif %}">
+
                 </div>  
                 <div class="col-md-6  align-items">
 
@@ -14,19 +18,32 @@
                     <p>
                         <small> Cập nhật núc : {{ book.timeb}}</small>
                     </p>
-                    <p>Thể loại:<small>{{book.num_category }}</small></p>
+                    <p>Thể loại:<small>{{book.list_category }}</small></p>
 
-                    <p class="text-danger">
-                        <strong> Gía sách: {{ book.bid}} V.N.D /1 còn {{ book.numbe_book }} quyển sách</strong>
+                    <p>
+                        <strong> Giá bìa : <strong class="text-danger" >{{ book.bid}} </strong> V.N.D</strong>
+                    </p>
+                    <p>
+                        <strong> Sách trong kho còn<strong> {{ book.numbe_book }}/{{ book.numbein_book}} </strong>quyển sách</strong>
                     </p>
                     <p>Mô tả :<small>{{book.description}}</small></p>
                     {% if user.is_authenticated %}
                         {% if  user.is_superuser %}
-                            <form action="{% url 'del_book' book_id %}" method="post">
-                                {% csrf_token %}
+                            <a href="{% url 'fixbook' book.id%}" class="text-decoration-none text-dark"> chỉnh sửa lớn</a>
+                            {% if book.dele_book %}
+                                <form action="{% url 'del_book' book_id %}" method="post">
+                                    {% csrf_token %}
 
-                                <button type="submit" class="btn btn-outline-primary btn-sm" style="color:red;">Xóa sách khỏi kệ</button>
-                            </form>
+                                    <button name="opent_book" type="submit" class="btn btn-outline-primary btn-sm" style="color:#00FF00;">Tiếp tục hoạt động</button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'del_book' book_id %}" method="post">
+                                    {% csrf_token %}
+
+                                    <button data-listid="{{  book.id }}" name="close_book" type="submit" class="btn btn-outline-primary btn-sm editofbook" style="color:#DC143C;">Tạm hoãn hoạt động</button>
+                                </form>  
+                            {% endif %}
+
                             
                         {% else %}
                                 <strong> Số dư khả dụng: {{ user.money}}  V.N.D</strong>
@@ -35,31 +52,28 @@
                                 {% csrf_token %}
                                 {% if is_in_list  %}
                                     {% if listing.active %}
-                                        <p><strong>Bạn đang giữ cuốn sách này</strong></p>
+                                        <p><strong>Hiện đang mượn</strong></p>
                                     {% else %}
                                         <p><strong>Đã đăng kí cuốn sách này</strong></p>
                                     {% endif %}
                                 {% else %}
                                     {% if  book.numbe_book < 1%}
-                                        <p><strong>Rất tiếc sách này đã hết,hãy kiên hệ giáo viên hoặc chờ đợi!</strong></p>
+                                        <p><strong>Rất tiếc sách này đã hết,hãy lựa chọn cuốn sách khác!</strong></p>
+                                    {% elif user.limit_book < 1 %}
+                                        <p><strong>Đã đạt giới hạn đăng kí,hãy kiên hệ giáo viên hoặc lọc danh sách!</strong></p>
                                     {% else %}
-                                        <button type="submit" class="btn btn-outline-primary btn-sm"><i class="fa fa-minus" aria-hidden="true"></i> Thêm cuốn sách này vào danh sách mượn</button>
+                                        <button type="submit" class="btn btn-outline-primary btn-sm"><i class="fa fa-minus" aria-hidden="true"></i>Đăng kí mượn</button>
                                     {% endif %}
                                     
                                 {% endif %}
                                 
                             </form>
-                            
-                            <form action="{% url 'changelike' book_id %}" method="post" class="d-inline-block">
-
-                                {% csrf_token %}
-                                {% if  is_in_listlike %}
-                                    <i style="color:red;">❤️️</i><button type="submit" class="btn btn-outline-primary"> Bỏ thích/{{ book.num_like}}người thích </button>
-                                {% else %}
-                                    <i>♡</i><button type="submit" class="btn btn-primary "> Thích /{{ book.num_like}}người thích </button>
-                                {% endif %}
+                            {% if  is_in_listlike %}
+                                <i><i style="color:red;">❤️️</i><button type="submit" data-bookid="{{ book.id }}" name="inlike-book"   class="btn btn-outline-primary like-book "> Bỏ thích</button>{{ book.num_like}}người đang thích  </i>
+                            {% else %}
+                            <i><i>♡</i><button type="submit" data-bookid="{{ book.id }}" name="unlike-book"  class="btn btn-outline-primary like-book "> Thích</button>{{ book.num_like}}người đang thích  </i>
+                            {% endif %}
                                 {% comment %} <button type="submit" class="btn btn-primary "><i class="fa fa-plus" aria-hidden="true">❤</i>Thích</button> {% endcomment %}
-                            </form>
                         {% endif %}
                     {% else %}
                         <p class="text-danger"><small>Bạn cần <strong><a href="{% url 'login' %}" class="text-danger">Đăng nhập</a></strong> Để có thể thao tác với cuốn sách này.</small></p>

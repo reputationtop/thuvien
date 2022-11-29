@@ -11,7 +11,7 @@
                             <div class="card_title m-2  " style="border: 1px solid rgba(0,0,0,.125);">
                                 <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
                                     <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
-                                    <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                                    <img class="card-img-topup"  src="{% if book.image %}/library/media/{{book.image}}{% else %}/library/media/logo/fixok.png{% endif %}">
                                     <small>{{ book.description}}</small>
                                 </a>
                             </div>  
@@ -76,7 +76,8 @@
 
                                 <a href="{% url 'book' book.id%}" class="text-decoration-none text-dark">
                                     <h5 class="card-title text-truncate">{{ book.namebook }}</h5>
-                                    <img src="/library/media/{{book.image}}"  class="card-img-top" >
+                                    <img class="card-img-topup"  src="{% if book.image %}/library/media/{{book.image}}{% else %}/library/media/logo/fixok.png{% endif %}">
+                                    {% comment %} <img src="/library/media/{{book.image}}"  class="card-img-topup" > {% endcomment %}
                                     <small>{{ book.description}}</small>
                                 </a>
                             </div>
