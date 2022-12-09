@@ -27,7 +27,7 @@ class Category(models.Model):
     class Meta:
         ordering = ['name']
 class Book(models.Model):
-    namebook = models.CharField(max_length=300)
+    namebook = models.CharField(max_length=100 ,)
     image = models.ImageField(upload_to="images", null=True, blank=True)
     description = models.CharField(max_length=600)
     numbe_book = models.IntegerField()
@@ -44,6 +44,14 @@ class Book(models.Model):
     def categorys(self):
         return str(self.category.all().count())
     def list_category(self):
+        mylist = self.category.all()
+        mystring = ",".join([str(char) for char in mylist])
+        return str(mystring)
+        # for y in self.category.all():
+        #    x+=str(y)+""
+        # print(x)   
+        
+    def listout_category(self):
         mylist = self.category.all()
         mystring = ",".join([str(char) for char in mylist])
         return str(mystring)

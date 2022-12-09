@@ -27,6 +27,38 @@ legend {
 </style>
 <body>
 
+  <form method="post" action="/Tests/Post">  
+    <fieldset>  
+    <legend>What is Your Favorite Pet?</legend>  
+    <input type="checkbox" name="favorite_pet" value="Cats" onclick="return ValidatePetSelection();">Cats<br>  
+    <input type="checkbox" name="favorite_pet" value="Dogs" onclick="return ValidatePetSelection();">Dogs<br>  
+    <input type="checkbox" name="favorite_pet" value="Birds" onclick="return ValidatePetSelection();">Birds<br>  
+        <br>  
+    <input type="submit" value="Submit now">  
+    </fieldset>  
+</form>  
+
+<script type="text/javascript">  
+function ValidatePetSelection()  
+{  
+    var checkboxes = document.getElementsByName("favorite_pet");  
+    var numberOfCheckedItems = 0;  
+    for(var i = 0; i < checkboxes.length; i++)  
+    {  
+        if(checkboxes[i].checked)  
+            numberOfCheckedItems++;  
+    }  
+    if(numberOfCheckedItems > 2)  
+    {  
+        alert("You can't select more than two favorite pets!");  
+        return false;  
+    }  
+}  
+</script>
+
+
+
+
 <h1>Show Checkboxes</h1>
 
 <form>
@@ -60,9 +92,30 @@ legend {
     <div>
       <button type="submit">Submit form</button>
     </div>
+
+    <div>
+
+      <input type="checkbox" id="myCheck" >
+      <label for="myCheck">checkall</label>
+    </div>
+    <button type="button" onclick="myFunction()">Try it</button>
+    <p id="demo"></p>
   </fieldset>
+
+  <div class="checkbox-row">
+    <input type="checkbox" name="dele_book" id="id_dele_book"><label class="vCheckboxLabel" for="id_dele_book">Dele book</label>
+  </div> 
+  <button type="button" onclick="myFunctions()">Try it</button> 
 </form>
 <script>
+  function myFunctions() {
+    var x = document.getElementById("id_dele_book").defaultChecked;
+    alert(x);
+  };
+  function myFunction() {
+    var x = document.getElementById("myCheck").defaultChecked;
+    alert(x);
+  };
   const otherCheckbox = document.querySelector('#other');
   const otherText = document.querySelector('#otherValue');
   otherText.style.visibility = 'hidden';
@@ -75,6 +128,8 @@ legend {
       otherText.style.visibility = 'hidden';
     }
   }); 
+
+
 </script>
 </body>
 </html>

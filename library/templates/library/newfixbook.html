@@ -4,60 +4,81 @@
 
     {% if  user.is_authenticated%}
         {% if user.is_superuser%}
-            <form action="{% url 'register' %}" method="post" class="form-signin" enctype="multipart/form-data">
-                {% csrf_token %}
-                <fieldset>
-                    <legend><h2 class="text-center">Chỉnh sửa sách</h2>:</legend>
-                    <div >Tên sách :
-                        <input class="form-control" autofocus type="text" name="namebook" value="{{thisbook.namebook}}">
-                    </div>
-                    <div >Ảnh mô tả:
-                        <input class="form-control" type="file" name="image" action="/library/media/"  value="{{thisbook.image}}" >
-                    </div>
+        
+            <form action="{% url 'fixbook' thisbook.id %}" method="post" class="form-signin" enctype="multipart/form-data">
 
-                    <div >Mô tả:
-                        <input class="form-control" autofocus type="text" name="description" value="{{thisbook.description}}">
-                    </div>
+                <legend><h2 class="text-center">Chỉnh sửa sách</h2>:</legend>
+                <div >Tên sách :
+                    <input class="form-control"  type="text" name="namebook"  minlength="5" maxlength="100" value="{{thisbook.namebook}}">
+                    {% comment %} <input class="form-control"  type="text" name="namebook" onkeypress="return /[0-9a-zA-Z]/i.test(event.key)" minlength="5" value="{{thisbook.namebook}}"> {% endcomment %}
+                </div>
+                <div >Ảnh mô tả:
+                    <input class="form-control" type="file" name="image"  action="/library/media/"  value="{{thisbook.image}}" >
+                </div>
 
-                    <div>Giá tiền
-                        <input null="false"  type="number" class="form-control"  name="bid" value="{{thisbook.bid}}" step="1000" min="5000" max="500000">
-                    </div>
+                <div >Mô tả:
+                    <input class="form-control"  type="text" name="description"  value="{{thisbook.description}}">
+                </div>
 
-                    <div >Số lượng sách:
-                        <input class="form-control" null="false"  type="number" min="1" max="50" step="1" type="text" name="numbein_book" value="{{thisbook.numbein_book}}">
-                    </div>
-                    <div >Thể loại:
-                        
-                        <select type="checkbox" name="category" id="test"  >
-                            {% for category_in  in categoryall %}
-                                <input type="checkbox" id="category_in.id" name="category_in.id" value="category_in.id">
-                                <label for="category_in.id"> {{category_in.name}}</label><br>                                
+                <div>Giá tiền
+                    <input null="false"  type="number" class="form-control"  name="bid" value="{{thisbook.bid}}" step="1000" min="5000" max="500000">
+                </div>
 
-
-                            {% endfor %}
-                        </select>
-                        {% comment %} <input class="form-control"  type="text" name="category" value="{{thisbook.list_category}}"> {% endcomment %}
-                    </div>
-
+                <div >Số lượng sách:
+                    <input class="form-control" null="false"  type="number" min="1" max="50" step="1" type="text" name="numbein_book" value="{{thisbook.numbein_book}}">
+                </div>
+                <div class="row">
                     
-                    <div class="flex_img">Xóa sách:
-                        <input type="checkbox" name="dele_book" id="dele_book" {% if thisbook.dele_book == True %}checked{% endif %}>
-                    </div>
-
-
-                    <div style="text-align: center; padding-top: 1px" >
-                        <nav style=" padding-top: 2px;">
-                            <input class="btn btn-primary "  style=" padding-top: 2px" name="upalll" type="submit" value="Lưu và chỉnh sửa">
-                        </nav>
-                        <nav style=" padding-top: 2px;">
-                            <input class="btn btn-primary "  style=" padding-top: 2px" name="upandfix" type="submit" value="lưu">
-                            
-                        </nav>
+                    Thể loại :<input id="list_all" name="listcategoryret" value="{{thisbook.list_category}}"  >{{thisbook.list_category}} </input>
+                    {% comment %} Thể loại :<form  name="listcategoryret" value="{{thisbook.list_category}}">{{thisbook.list_category}} </form> {% endcomment %}
+                    <div>
+                        {% for category_in  in categoryall %}
+                            <input type="checkbox" id="{{category_in.id}}" name="category_in_name" value="{{category_in.name}}" onclick="return ValidatePetSelection();">
+                            <label for="{{category_in.id}}"> {{category_in.name}}</label><br>                                
+                        {% endfor %}     
                         
-                    </div>
+                        {% for category_in  in categoryon %}
+                            <input type="checkbox" id="{{category_in.id}}" name="category_in_name" value="{{category_in.name}}" onclick="return ValidatePetSelection();" checked>
+                            <label for="{{category_in.id}}"> {{category_in.name}}</label><br>                                
+                        {% endfor %} 
 
-                </fieldset>
+                    </div>
+                </div>
+                <div class="flex_img">Xóa sách:
+                    <input type="checkbox" name="dele_book" {% if thisbook.dele_book == True %}checked{% endif %}>
+                </div>
+                <div >Mô tả sự thay đổi:
+                    <input class="form-control"  type="text" name="reasons" value="">
+                </div>
+                <div style="text-align: center; padding-top: 1px" >
+                    <nav style=" padding-top: 2px;">
+                        <input class="btn btn-secondary " name="upalll" type="submit" value="Lưu và chỉnh sửa">
+                    </nav>
+                    <nav style=" padding-top: 2px;">
+                        <input class="btn btn-secondary "  style=" padding-top: 2px" name="upandfix" type="submit" value="lưu">
+                        
+                    </nav>
+                    
+                </div>
             </form>
+
+            <script type="text/javascript">  
+                function ValidatePetSelection()  
+                {  
+                    var checkboxes = document.getElementsByName("category_in_name");  
+                    var CheckedItems = [];  
+                    for(var i = 0; i < checkboxes.length; i++)  
+                        {  
+                            if(checkboxes[i].checked)  
+                            CheckedItems.push(checkboxes[i].value) ;  
+                            
+                        }   
+                    document.getElementById("list_all").value = CheckedItems;
+                    document.getElementById("list_all").innerHTML = CheckedItems;
+                }  
+                </script>
+
+
         {% else %}
             <h1 class="text-center">Bạn cần phải đăng nhập tài khoản giáo viên để có thể sử dụng chức năng này</h1>
             <h2 class="text-center"><a class="btn btn-primary" href="{% url 'login' %}">Nhấn vào đây để đăng nhập.</a></h2>

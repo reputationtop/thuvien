@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from pickle import TRUE
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -316,7 +317,7 @@ def NewListing(request, book_id):
                 listing = Listing.objects.get(item=book, user=request.user,dele_listing=False)
                 messages.error(request, 'Hãy kiểm tra lại ')
                 return HttpResponseRedirect(reverse("book", args=(book_id,)))
-            except Listing.DoesNotExist:
+            except :
                 if book.numbe_book >= 1:
                     
                     User_acc =  request.user
@@ -376,7 +377,7 @@ def change_listing(request):
             listing.active = True
             listing.save()
 
-            return JsonResponse({"success": " có lỗi xảy ra,không thấy danh sách"}, status=400)
+            return JsonResponse({"success": " có lỗi xảy ra,không thấy danh sách"})
         else:
             return JsonResponse({"error": " không nhận diện được tài khoản giáo viên"}, status=400)
 
@@ -452,33 +453,78 @@ def fixbook(request, book_id):
         # for x in thisbook.category:
         #     print(x.name)
         # print(thisbook.category)
+        categoryon =  thisbook.category.all()
         categoryall = Category.objects.all()
-        if request.method == "PUT":
-            # namebook = request.PUT["new_category"]
-            # image = request.PUT["new_category"]
-            # description = request.PUT["new_category"]
+        for cate in categoryon:
+            categoryall = categoryall.exclude(id=cate.id)
+        if request.method == "POST":
+            if ( 'namebook' in request.POST):
+                namebook_re = request.POST["namebook"]
+                new_string = ''.join(filter(str.isalnum, namebook_re)) 
+                if thisbook.namebook != namebook_re:
+                    if len(new_string) >= 5 and len(new_string) <= 300:
+                        thisbook.namebook = new_string
+                    
+            # if ( 'image' in request.POST):
+            #     # avatar = request.FILES["avatar"]
+            image = request.FILES["image"]
+            thisbook.image = image
+            print(image,"image")
+            print(thisbook.image)
+                # import requests
+                # myurl = 'https://httpbin.org/post'
+                # f = {'file data': open('TestFile.txt', 'New data')}
+                # res = requests.post(myurl, files=f)
+                # print(res.text)# 
+            if ( 'description' in request.POST):
+                description = request.POST["description"]
+                if thisbook.description != description:
+                    thisbook.description = description
+            if ( 'numbein_book' in request.POST):
+                numbein_book = request.POST["numbein_book"]
 
-            # numbein_book = request.PUT["new_category"]
-            # bid = request.PUT["new_category"]
-            # numbe_views = request.PUT["new_category"]
-            # dele_book = request.PUT["new_category"]
-            # category = request.PUT["new_category"]
-            form = NewbookForm(request.POST ,request.FILES)
+                if thisbook.numbein_book <  int(numbein_book):
+                    thisbook.numbe_book = thisbook.numbe_book+(int(numbein_book)-thisbook.numbe_book)
+                    thisbook.numbein_book = int(numbein_book)
+                elif thisbook.numbein_book >  int(numbein_book):
+                    if (thisbook.numbein_book - int(numbein_book)) <= thisbook.numbe_book:
+                        thisbook.numbe_book = thisbook.numbe_book-(thisbook.numbe_book -int(numbein_book))
+                        thisbook.numbein_book = int(numbein_book)
+
+            if ( 'bid' in request.POST):
+                bid = request.POST["bid"]
+                # money_flow = thisbook.bid -int(bid)
+                thisbook.bid =int(bid)
+            if ('dele_book' in request.POST):
+                thisbook.dele_book=True
+            else:
+                thisbook.dele_book=False
+            if ( 'listcategoryret' in request.POST):
+                category_re = request.POST["listcategoryret"]
+                if category_re  is not None:
+                    thisbook.category.set("") 
+                    if len(category_re)>=1:
+                        for abss in category_re.split(","):
+                            if Category.objects.get(name = abss):
+                                thisbook.category.add(Category.objects.get(name = abss))
+                #     print("loi")
+            # if ( 'reasons' in request.POST):
+            #     reasons = request.POST["reasons"]
+            #     print(reasons,"resion")
             
-            form.instance.numbein_book = int(request.POST["numbe_book"])
-            form.save
-            if form.is_valid():
-                new_book = form.save()
-                reasons = "thêm sách mới vào kho"
-                active_a = active_all.objects.create(performer=request.user,item = new_book, reason = reasons)
-                active_a.save()
-                return HttpResponseRedirect(reverse("book", args=(new_book.pk,)))
+            thisbook.save()
+            # active_a = active_all.objects.create(performer=request.user,item = thisbook, reason = reasons)
+            # active_a.save()
+
+            
+            return HttpResponseRedirect(reverse("book", args=(thisbook.pk,)))
         else:
-            form = NewbookForm()
-        return render(request, "library/newfixbook.html", {
-            "thisbook": thisbook,
-            "categoryall": categoryall
-        })
+            return render(request, "library/newfixbook.html", {
+                
+                "thisbook": thisbook,
+                "categoryon": categoryon,
+                "categoryall": categoryall
+            })
     else:
         messages.error(request, 'bạn phải đăng nhập tài khoản giáo viên để thực hiện thao tác này')
         return HttpResponseRedirect(reverse("index"))
