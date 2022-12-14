@@ -16,10 +16,14 @@ class User(AbstractUser):
     money =models.IntegerField(default=0, blank=True)
     avatar = models.ImageField(upload_to="avatar", null=True, blank=True)
     limit_book = models.IntegerField(default=10,blank=True)
+    # ratings = models.IntegerField(default=1,blank=True,null=True)
+    # rating là trang thai tai khoan chua xac thuc 1 hoc sinh 2  giao vien  3    quan li giao vien( superuser)
     pass
+
     class Meta:
         ordering = ['-date_joined']
-        
+    def categorys(self):
+        return str(self.category.all().count())
 class Category(models.Model):
     name = models.CharField(max_length=300)
     def __str__(self):

@@ -46,6 +46,9 @@ urlpatterns = [
     
     
     path("human/<int:user_id>", views.human, name="human"),
+    path("fixhuman/<int:user_id>", views.fixhuman, name="fixhuman"),
+    
+    
     path("views_active_all/<int:user_id>", views.views_active_all, name="views_active_all"),
     path("views_active_human/<int:user_id>", views.views_active_human, name="views_active_human"),
     path("views_active_book/<int:user_id>", views.views_active_book, name="views_active_book"),

@@ -29,8 +29,8 @@
                     <p>Mô tả :<small>{{book.description}}</small></p>
                     {% if user.is_authenticated %}
                         {% if  user.is_superuser %}
-                            <a href="{% url 'fixbook' book.id%}" class="text-decoration-none text-dark"> chỉnh sửa lớn</a>
-                            {% if book.dele_book %}
+                            <a href="{% url 'fixbook' book.id%}" class="btn btn-outline-primary btn-sm" style="color:#00FF00;"> Chỉnh sửa thông tin sách</a>
+                            {% comment %} {% if book.dele_book %}
                                 <form action="{% url 'del_book' book_id %}" method="post">
                                     {% csrf_token %}
 
@@ -42,7 +42,7 @@
 
                                     <button data-listid="{{  book.id }}" name="close_book" type="submit" class="btn btn-outline-primary btn-sm editofbook" style="color:#DC143C;">Tạm hoãn hoạt động</button>
                                 </form>  
-                            {% endif %}
+                            {% endif %} {% endcomment %}
 
                             
                         {% else %}

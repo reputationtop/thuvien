@@ -56,22 +56,24 @@
                                         </td>
                                         
                                         <td>
-
-                                            <div class="card-text money flex_img"  style="font-size: 0.9rem; margin-bottom: .5rem">Số dư: 
+{% comment %} 
+                                            justify-content: space-between {% endcomment %}
+                                            <div class="card-text money flex_img" style="justify-content: space-between;" >
                                                 <div class="flex_img">
+                                                    Số dư: 
                                                     <strong id="money{{ in_user.id }}">{{ in_user.money}}</strong>
-                                                    <button style="float: right; font-size: small; padding: 4px 10px" data-userid="{{ in_user.id }}"
-                                                        class="btn edit-btn editmoney btn-sm btn-outline-secondary"><strong>+</strong>
-                                                    </button>  
+
                                                 </div>
-                                          
+                                                <button style="float: right !important; font-size: small; padding: 4px 10px" data-userid="{{ in_user.id }}"
+                                                    class="btn edit-btn editmoney btn-sm btn-outline-secondary"><strong>+</strong>
+                                                </button>                                            
                                             </div>
 
 
 
 
                                         </td>
-                                        <td>{{ in_user.limit_book}}</td>
+                                        <td style="padding-left: 18px;">{{in_user.limit_book}}</td>
                                         <td><small datetime="{{in_user.date_joined}}"> Lần truy cập gần nhất {{ in_user.date_joined}}</small></td>
                                     </tr>
 

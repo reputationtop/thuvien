@@ -4,11 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.editmoney').forEach(btn => {
     btn.onclick = function () {
         
-        btn.style.display = 'none'
-        console.log(btn.dataset.userid)
+        btn.style.display = 'none';
+        console.log(btn.dataset.userid);
     
         let moneyDiv = document.querySelector(`#money${btn.dataset.userid}`);
-        var nowmoney = moneyDiv.innerHTML
+        var nowmoney = moneyDiv.innerHTML;
         moneyDiv.innerHTML =
         // ` <form id="edit-post-form" action="/add_bid/${btn.dataset.userid}" method="POST" class="card-text" style="margin-top: 1rem; margin-bottom: 1.6rem">
         ` <form id="edit-money-form" class="card-text" style="margin-top: 1rem; margin-bottom: 1.6rem ;min-width:150px;">
@@ -128,12 +128,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // xác nhận việc mượn sách chủa hs/cho mượn
   document.querySelectorAll('.editlisting').forEach(btn => {
       btn.onclick = function () {
-          btn.style.display = 'none'
-          console.log(btn.dataset.listid)
-          let listDiv = document.querySelector(`#list${btn.dataset.listid}`)
-          var listup = listDiv;
+          // btn.style.display = 'none';
+          console.log(btn.dataset.listid);
+          let listDiv = document.querySelector(`#list${btn.dataset.listid}`);
+          var listup = listDiv.innerHTML;
           listDiv.innerHTML =
-          ` <form id="edit-listing-form" class="card-text" style="margin-top: 1rem; margin-bottom: 1.6rem">
+          `<form class="card-text" style="margin-top: 1rem; margin-bottom: 1.6rem">
 
               <div>
                   <input type="number" placeholder="Nhập số ngày" class="form-control" step="1" required="" id="edit-listing-textarea" min="1" max="90">
@@ -145,8 +145,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
           $('input[name=close]').click(function (e) {
 
-            listDiv.innerHTML = listup
-            btn.style.display = 'block'
+            listDiv.innerHTML= listup;
+            // btn.style.display = 'block';
             return false;
           });
 
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // liwowtj thích/không
   document.querySelectorAll('.like-book').forEach(btn => {
     btn.onclick = function () {
-      var name_buton = btn.name
+      var name_buton = btn.name;
       alert("tên nút " + name_buton);
       fetch('/changebook', {
         method:'PUT',
@@ -231,9 +231,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.querySelectorAll('.edit_num_book').forEach(btn => {
     btn.onclick = function () {
-        btn.style.display = 'none'
-        console.log(btn.dataset.listid)
-        let listDiv = document.querySelector(`#list${btn.dataset.listid}`)
+        btn.style.display = 'none';
+        console.log(btn.dataset.listid);
+        let listDiv = document.querySelector(`#list${btn.dataset.listid}`);
         listDiv.innerHTML =
         ` <form id="edit-post-form" action="/change_listing/${btn.dataset.listid}" method="POST" class="card-text" style="margin-top: 1rem; margin-bottom: 1.6rem">
 
@@ -254,23 +254,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   // chỉnh số lượng sách
-  document.querySelectorAll('.editofbook').forEach(btn => {
-    btn.onclick = function () {
-        btn.style.display = 'none'
-        console.log(btn.dataset.listid)
-        let listDiv = document.querySelector(`#list${btn.dataset.listid}`)
-        listDiv.innerHTML =
-        ` <form id="edit-post-form" action="/change_listing/${btn.dataset.listid}" method="POST" class="card-text" style="margin-top: 1rem; margin-bottom: 1.6rem">
+  // document.querySelectorAll('.editofbook').forEach(btn => {
+  //   btn.onclick = function () {
+  //       btn.style.display = 'none';
+  //       console.log(btn.dataset.listid);
+  //       let listDiv = document.querySelector(`#list${btn.dataset.listid}`);
+  //       listDiv.innerHTML =
+  //       ` <form id="edit-post-form" action="/change_listing/${btn.dataset.listid}" method="POST" class="card-text" style="margin-top: 1rem; margin-bottom: 1.6rem">
 
-            <div>
-                <input type="number" name="num_book" placeholder="Nhập sách" class="form-control" step="1" required="" id="edit-post-textarea" min="1" max="90">
-            </div>
-            <input type="submit" name="more_book" class="btn btn-sm btn-outline-primary" value="Thêm sách">
-            <input type="submit" name="lose_book" class="btn btn-sm btn-outline-primary" value="Loại bớt">
+  //           <div>
+  //               <input type="number" name="num_book" placeholder="Nhập sách" class="form-control" step="1" required="" id="edit-post-textarea" min="1" max="90">
+  //           </div>
+  //           <input type="submit" name="more_book" class="btn btn-sm btn-outline-primary" value="Thêm sách">
+  //           <input type="submit" name="lose_book" class="btn btn-sm btn-outline-primary" value="Loại bớt">
 
-        </form>`
-    }
-  })
+  //       </form>`
+  //   }
+  // })
 
   $(document).ready(function() {
       var owl = $('.owl-carousel');

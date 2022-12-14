@@ -12,8 +12,13 @@
                     <input class="form-control"  type="text" name="namebook"  minlength="5" maxlength="100" value="{{thisbook.namebook}}">
                     {% comment %} <input class="form-control"  type="text" name="namebook" onkeypress="return /[0-9a-zA-Z]/i.test(event.key)" minlength="5" value="{{thisbook.namebook}}"> {% endcomment %}
                 </div>
+                {% comment %} <div class="form-group">
+                    <input class="form-control" type="file" name="avatar" action="/library/media/"  placeholder="Ảnh">
+                </div> {% endcomment %}
+
                 <div >Ảnh mô tả:
-                    <input class="form-control" type="file" name="image"  action="/library/media/"  value="{{thisbook.image}}" >
+                    <input class="form-control" type="file" name="image_in"  action="/library/media/"  placeholder="{{thisbook.image}}">
+                    {% comment %} <input class="form-control" type="file" name="image"  action="/library/media/"  > {% endcomment %}
                 </div>
 
                 <div >Mô tả:
@@ -25,7 +30,7 @@
                 </div>
 
                 <div >Số lượng sách:
-                    <input class="form-control" null="false"  type="number" min="1" max="50" step="1" type="text" name="numbein_book" value="{{thisbook.numbein_book}}">
+                    {% comment %} <input class="form-control" null="false"  type="number" min="{{thisbook.numbein_book}}" max="50" step="1" type="text" name="numbein_book" value="{{thisbook.numbein_book}}"> {% endcomment %}
                 </div>
                 <div class="row">
                     

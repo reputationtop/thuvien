@@ -39,7 +39,9 @@
                         <a class="btn btn-sm btn-outline-secondary" href="{% url 'views_active_mall' id_acc%}" id="work_alls">Hộp thư</a>  
                         <a class="btn btn-sm btn-outline-secondary" href="{% url 'views_active_coment' id_acc%}" id="work_coments">Bình luận </a>
                         <a class="btn btn-sm btn-outline-secondary" href="{% url 'views_active_money' id_acc%}" id="work_moneys">Biến động số dư</a>
-                        <a class="btn btn-sm btn-outline-secondary " href="{% url 'views_active_over' id_acc%}" id="work_others ">các hoạt động khác</a> 
+                        <a class="btn btn-sm btn-outline-secondary " href="{% url 'views_active_over' id_acc%}" id="work_others">Bác hoạt động khác</a> 
+                        {% comment %} <a class="btn btn-sm btn-outline-secondary " href="{% url 'views_active_password' id_acc%}" id="work_pasword">Đổi mật khẩu</a> {% endcomment %}
+                        <a class="btn btn-sm btn-outline-secondary " href="{% url 'logout' %}">Đăng xuất</a> 
                     {% endif %}
                     
 

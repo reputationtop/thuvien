@@ -457,6 +457,7 @@ def fixbook(request, book_id):
         categoryall = Category.objects.all()
         for cate in categoryon:
             categoryall = categoryall.exclude(id=cate.id)
+
         if request.method == "POST":
             if ( 'namebook' in request.POST):
                 namebook_re = request.POST["namebook"]
@@ -464,36 +465,43 @@ def fixbook(request, book_id):
                 if thisbook.namebook != namebook_re:
                     if len(new_string) >= 5 and len(new_string) <= 300:
                         thisbook.namebook = new_string
-                    
-            # if ( 'image' in request.POST):
-            #     # avatar = request.FILES["avatar"]
-            image = request.FILES["image"]
-            thisbook.image = image
-            print(image,"image")
-            print(thisbook.image)
-                # import requests
-                # myurl = 'https://httpbin.org/post'
-                # f = {'file data': open('TestFile.txt', 'New data')}
-                # res = requests.post(myurl, files=f)
-                # print(res.text)# 
+            
+            
+                # avatar = request.FILES["avatar"]
+                # print("sai1")
+                # thisbook.image = request.FILES["image_in"]
+                # print("sai2")
+            image_re = request.FILES["image_in"]
+            if image_re is not None :
+                thisbook.image = image_re 
+
+                        # name_follow ="sửa tên sách :" (new_string) 
+                # if ( 'image' in request.POST):
+                #     # avatar = request.FILES["avatar"]
+
+                    # img_follow ="sửa ảnh"  
             if ( 'description' in request.POST):
                 description = request.POST["description"]
                 if thisbook.description != description:
                     thisbook.description = description
+                # de_follow ="sua mô tả :" (description)  
             if ( 'numbein_book' in request.POST):
                 numbein_book = request.POST["numbein_book"]
 
                 if thisbook.numbein_book <  int(numbein_book):
                     thisbook.numbe_book = thisbook.numbe_book+(int(numbein_book)-thisbook.numbe_book)
                     thisbook.numbein_book = int(numbein_book)
+                    # book_follow ="sua so luoang sach" (int(numbein_book)- thisbook.numbe_book )
                 elif thisbook.numbein_book >  int(numbein_book):
                     if (thisbook.numbein_book - int(numbein_book)) <= thisbook.numbe_book:
                         thisbook.numbe_book = thisbook.numbe_book-(thisbook.numbe_book -int(numbein_book))
                         thisbook.numbein_book = int(numbein_book)
+                        # book_follow ="sua so luoang sach" (thisbook.numbe_book -int(numbein_book))
 
             if ( 'bid' in request.POST):
                 bid = request.POST["bid"]
                 # money_flow = thisbook.bid -int(bid)
+                # bid_follow ="sua gia tien" (int(bid))
                 thisbook.bid =int(bid)
             if ('dele_book' in request.POST):
                 thisbook.dele_book=True
@@ -508,14 +516,17 @@ def fixbook(request, book_id):
                             if Category.objects.get(name = abss):
                                 thisbook.category.add(Category.objects.get(name = abss))
                 #     print("loi")
-            # if ( 'reasons' in request.POST):
-            #     reasons = request.POST["reasons"]
-            #     print(reasons,"resion")
-            
+            if ( 'reasons' in request.POST):
+                reasons = request.POST["reasons"]
+            else:
+                reasons = "chỉnh sửa thông tin sách :"
+            # reasons= reasons + "" + book_follow + "" + bid_follow + "" + name_follow + "" + de_follow + "" +img_follow
             thisbook.save()
-            # active_a = active_all.objects.create(performer=request.user,item = thisbook, reason = reasons)
-            # active_a.save()
+            active_a = active_all.objects.create(performer=request.user,item = thisbook, reason = reasons)
+            active_a.save()
 
+
+            # print("Toi la {0}, toi {1} tuoi".format(name, age))
             
             return HttpResponseRedirect(reverse("book", args=(thisbook.pk,)))
         else:
@@ -900,6 +911,21 @@ def views_active_over(request, user_id):
     })
     
     
+csrf_exempt
+@login_required(login_url='login')
+def views_active_password(request, user_id):
+    users = User.objects.get(pk=user_id)
+    if request.user.is_superuser:
+        active_over = active_all.objects.filter(subject_active=users ).order_by("-time_2")
+    else:
+        active_over = active_all.objects.filter(subject_active=users,classify_active = 0).order_by("-time_2")
+    return render(request, "library/cation_over.html", {
+        "active_over":active_over,
+        "users": users,
+        "id_acc": user_id,
+    })
+#     if
+    
     
     
     
@@ -914,6 +940,102 @@ def human(request, user_id):
         "list_in": list_in,
         "users": users
     })
+    
+    
+    
+
+# @csrf_exempt
+# @login_required
+# def fixhuman(request, user_id):
+#     if request.user.is_superuser:
+#         user_on = User.objects.get(id= user_id)
+#     else:
+#         user_on = request.user
+    
+#     if request.method == "POST":
+#         if"close_book" in request.POST:
+#             avatar = request.FILES["avatar"]
+#         first_name = request.POST["first_name"]
+#         last_name = request.POST["last_name"]
+#         email = request.POST["email"]
+#         password = request.POST["password"]
+#         confirmation = request.POST["confirmation"]
+#         if avatar is None:
+#             messages.error(request, 'thieu anh')
+#             return HttpResponseRedirect(reverse("register"))
+#         if password != confirmation:
+#             return render(request, "library/register.html", {
+#                 "mesage": "mật khẩu không đúng"
+#             })
+#             # avatar = request.FILES["avatar"]
+#             # print("sai1")
+#             # thisbook.image = request.FILES["image_in"]
+#             # print("sai2")
+#         image_re = request.FILES["image_in"]
+#         if image_re is not None :
+            
+#             thisbook.image = image_re 
+
+#                     # name_follow ="sửa tên sách :" (new_string) 
+#             # if ( 'image' in request.POST):
+#             #     # avatar = request.FILES["avatar"]
+
+#                 # img_follow ="sửa ảnh"  
+#         if ( 'description' in request.POST):
+#             description = request.POST["description"]
+#             if thisbook.description != description:
+#                 thisbook.description = description
+#             # de_follow ="sua mô tả :" (description)  
+#         if ( 'numbein_book' in request.POST):
+#             numbein_book = request.POST["numbein_book"]
+
+#             if thisbook.numbein_book <  int(numbein_book):
+#                 thisbook.numbe_book = thisbook.numbe_book+(int(numbein_book)-thisbook.numbe_book)
+#                 thisbook.numbein_book = int(numbein_book)
+#                 # book_follow ="sua so luoang sach" (int(numbein_book)- thisbook.numbe_book )
+#             elif thisbook.numbein_book >  int(numbein_book):
+#                 if (thisbook.numbein_book - int(numbein_book)) <= thisbook.numbe_book:
+#                     thisbook.numbe_book = thisbook.numbe_book-(thisbook.numbe_book -int(numbein_book))
+#                     thisbook.numbein_book = int(numbein_book)
+#                     # book_follow ="sua so luoang sach" (thisbook.numbe_book -int(numbein_book))
+
+#         if ( 'bid' in request.POST):
+#             bid = request.POST["bid"]
+#             # money_flow = thisbook.bid -int(bid)
+#             # bid_follow ="sua gia tien" (int(bid))
+#             thisbook.bid =int(bid)
+#         if ('dele_book' in request.POST):
+#             thisbook.dele_book=True
+#         else:
+#             thisbook.dele_book=False
+#         if ( 'listcategoryret' in request.POST):
+#             category_re = request.POST["listcategoryret"]
+#             if category_re  is not None:
+#                 thisbook.category.set("") 
+#                 if len(category_re)>=1:
+#                     for abss in category_re.split(","):
+#                         if Category.objects.get(name = abss):
+#                             thisbook.category.add(Category.objects.get(name = abss))
+#             #     print("loi")
+#         if ( 'reasons' in request.POST):
+#             reasons = request.POST["reasons"]
+#         else:
+#             reasons = "chỉnh sửa thông tin sách :"
+#         # reasons= reasons + "" + book_follow + "" + bid_follow + "" + name_follow + "" + de_follow + "" +img_follow
+#         user_on.save()
+#         active_a = active_all.objects.create(performer=request.user,item = thisbook, reason = reasons)
+#         active_a.save()
+
+
+#         # print("Toi la {0}, toi {1} tuoi".format(name, age))
+        
+#         return HttpResponseRedirect(reverse("book", args=(thisbook.pk,)))
+#     else:
+#         return render(request, "library/newfixbook.html", {
+            
+#             "user_on": user_on,
+#         })
+
 @csrf_exempt
 @login_required(login_url='login')
 def add_bid(request):
@@ -963,22 +1085,23 @@ def logout_view(request):
     
 @login_required(login_url='login')
 def register(request):
-    if request.user.is_authenticated:
+    
+    if request.method == "POST":
         if request.user.is_superuser:
-            if request.method == "POST":
-                avatar = request.FILES["avatar"]
-                username = request.POST["username"]
-                email = request.POST["email"]
-                password = request.POST["password"]
-                confirmation = request.POST["confirmation"]
-                if avatar is None:
-                    messages.error(request, 'thieu anh')
-                    return HttpResponseRedirect(reverse("register"))
-                if password != confirmation:
-                    return render(request, "library/register.html", {
-                        "mesage": "mật khẩu không đúng"
-                    })
-                try:
+            avatar = request.FILES["avatar"]
+            username = request.POST["username"]
+            email = request.POST["email"]
+            password = request.POST["password"]
+            confirmation = request.POST["confirmation"]
+            if avatar is None:
+                messages.error(request, 'thieu anh')
+                return HttpResponseRedirect(reverse("register"))
+            if password != confirmation:
+                return render(request, "library/register.html", {
+                    "mesage": "mật khẩu không đúng"
+                })
+            try:
+                if request.user.is_superuser:
                     if"teacher" in request.POST:
                         user = User.objects.create_superuser( username, email, password, avatar=avatar)
                         user.save()
@@ -988,20 +1111,17 @@ def register(request):
                         user.save()
                         messages.success(request, 'bạn đã tạo thêm 1 tài khoản')
                         return render(request, "library/register.html")
-                    else:
-                        user = User.objects.create_user( username, email, password,money = 30000,avatar=avatar)
-                        user.save()
-                except IntegrityError:
-                    """ return render(request, "library/register.html", {
-                            "message":"tên người dùng đã được sử dụng"
-                    })"""
-                    messages.error(request, 'tên người dùng đã được sử dụng')
-                    return HttpResponseRedirect(reverse("register"))
-                login(request, user)
-                return HttpResponseRedirect(reverse("index"))
-            else:
-                return render(request, "library/register.html")
-        messages.error(request, 'bạn phải đăng nhập tài khoản giáo viên để thực hiện thao tác này')
-        return HttpResponseRedirect(reverse("index"))
+                else:
+                    user = User.objects.create_user( username, email, password,avatar=avatar)
+                user.save()
+            except IntegrityError:
+                """ return render(request, "library/register.html", {
+                        "message":"tên người dùng đã được sử dụng"
+                })"""
+                messages.error(request, 'tên người dùng đã được sử dụng')
+                return HttpResponseRedirect(reverse("register"))
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
     else:
-        return HttpResponseRedirect(reverse("index"))
+        return render(request, "library/register.html")
+        
